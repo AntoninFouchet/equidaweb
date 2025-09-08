@@ -1,4 +1,3 @@
-test\TestCategVente.class
 model\Lieu.class
 model\Cheval.class
 model\Enchere.class
@@ -11,6 +10,7 @@ model\Lot.class
 test\TestConnexionBdd.class
 test\TestVente.class
 database\Connexionbdd.class
+test\TestEnchere.class
 model\Race.class
 model\Vente.class
 test\TestRace.class

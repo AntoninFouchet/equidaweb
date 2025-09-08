@@ -1,12 +1,14 @@
 package model;
 
 import java.util.Date;
-
 public class Vente {
 
     private int id;
     private String nom;
     private String dateDebutVente;
+    private CategVente categVente;
+    private Lieu lieu;
+    private Lot lot;
 
     public Vente() {
     }
@@ -45,5 +47,22 @@ public class Vente {
     public void setDateDebutVente(String dateDebutVente) {
         this.dateDebutVente = dateDebutVente;
     }
- 
+    public CategVente getCategVente() {
+        return categVente;
+    }
+    public void setCategVente(CategVente categVente) {
+        this.categVente = categVente;
+    }
+    public Lieu getLieu() {
+        return lieu;
+    }
+    public void setLieu(Lieu lieu) {
+    this.lieu = lieu;
+    }
+    public Lot getlot() {
+        return lot;
+    }
+    public void setLot(Lot lot) {
+        this.lot = lot;
+    }
 }
