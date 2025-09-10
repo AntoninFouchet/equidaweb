@@ -11,6 +11,7 @@ test\TestConnexionBdd.class
 test\TestVente.class
 database\Connexionbdd.class
 test\TestEnchere.class
+test\TestLot.class
 model\Race.class
 model\Vente.class
 test\TestRace.class

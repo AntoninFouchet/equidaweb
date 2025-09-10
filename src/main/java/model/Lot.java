@@ -11,6 +11,7 @@ package model;
 public class Lot {
     private int id;
     private int prixDepart;
+    private Vente vente;
 
     public Lot() {
     }
@@ -29,6 +30,13 @@ public class Lot {
 
     public void setPrixDepart(int prixDepart) {
         this.prixDepart = prixDepart;
+    }
+    
+    public Vente getVente() {
+        return vente;
+    }
+    public void setVente(Vente vente) {
+        this.vente = vente;
     }
     
     
