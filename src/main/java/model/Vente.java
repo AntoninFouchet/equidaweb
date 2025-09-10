@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 public class Vente {
 
@@ -9,6 +10,8 @@ public class Vente {
     private CategVente categVente;
     private Lieu lieu;
     private Lot lot;
+    
+    private ArrayList<Lot> lesLots ;
 
     public Vente() {
     }
@@ -64,5 +67,19 @@ public class Vente {
     }
     public void setLot(Lot lot) {
         this.lot = lot;
+    }
+    
+    public ArrayList<Lot> getLesLots() {
+        return lesLots;
+    }
+
+    public void setLesLots(ArrayList<Lot> lesLots) {
+        this.lesLots = lesLots;
+    }
+    public void addLot(Lot unLot){
+        if (lesLots ==null ){
+            lesLots = new ArrayList<Lot>();
+        }
+        lesLots.add(unLot);
     }
 }
