@@ -44,7 +44,7 @@ public class CategVente {
     public void setLesVentes(ArrayList<Vente> lesVentes) {
         this.lesVentes = lesVentes;
     }
-    public void addCategVente(Vente uneVente){
+    public void addVente(Vente uneVente){
         if (lesVentes ==null ){
             lesVentes = new ArrayList<Vente>();
         }
