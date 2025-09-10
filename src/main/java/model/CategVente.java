@@ -4,6 +4,8 @@
  */
 package model;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author sio2
@@ -12,6 +14,8 @@ public class CategVente {
 
     private int code;
     private String libelle;
+    
+    private ArrayList<CategVente> lesCategVentes;
     
     public CategVente(){
     } 
@@ -32,7 +36,20 @@ public class CategVente {
         this.libelle = libelle;
     }
 
+        
+    public ArrayList<CategVente> getLesCategVentes() {
+        return lesCategVentes;
+    }
 
+    public void setLesCategVentes(ArrayList<CategVente> lesCategVentes) {
+        this.lesCategVentes = lesCategVentes;
+    }
+    public void addCategVente(CategVente uneCategVente){
+        if (lesCategVentes ==null ){
+            lesCategVentes = new ArrayList<CategVente>();
+        }
+        lesCategVentes.add(uneCategVente);
+    }
 
     
     
