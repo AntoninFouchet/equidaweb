@@ -15,7 +15,7 @@ public class CategVente {
     private int code;
     private String libelle;
     
-    private ArrayList<CategVente> lesCategVentes;
+    private ArrayList<Vente> lesVentes;
     
     public CategVente(){
     } 
@@ -37,18 +37,18 @@ public class CategVente {
     }
 
         
-    public ArrayList<CategVente> getLesCategVentes() {
-        return lesCategVentes;
+    public ArrayList<Vente> getLesVentes() {
+        return lesVentes;
     }
 
-    public void setLesCategVentes(ArrayList<CategVente> lesCategVentes) {
-        this.lesCategVentes = lesCategVentes;
+    public void setLesVentes(ArrayList<Vente> lesVentes) {
+        this.lesVentes = lesVentes;
     }
-    public void addCategVente(CategVente uneCategVente){
-        if (lesCategVentes ==null ){
-            lesCategVentes = new ArrayList<CategVente>();
+    public void addCategVente(Vente uneVente){
+        if (lesVentes ==null ){
+            lesVentes = new ArrayList<Vente>();
         }
-        lesCategVentes.add(uneCategVente);
+        lesVentes.add(uneVente);
     }
 
     

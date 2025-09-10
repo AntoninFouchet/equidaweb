@@ -56,5 +56,20 @@ public class Lieu {
     public void setVille(String ville) {
         this.ville = ville;
     }
+            
+    public ArrayList<CategVente> getLesCategVentes() {
+        return lesCategVentes;
+    }
+
+    public void setLesCategVentes(ArrayList<CategVente> lesCategVentes) {
+        this.lesCategVentes = lesCategVentes;
+    }
+    public void addCategVente(CategVente uneCategVente){
+        if (lesCategVentes ==null ){
+            lesCategVentes = new ArrayList<CategVente>();
+        }
+        lesCategVentes.add(uneCategVente);
+    }
+
 
 }
