@@ -1,6 +1,7 @@
 package model;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 public class Cheval {
 
@@ -9,6 +10,9 @@ public class Cheval {
     private LocalDate dateNaissance;
 
     private Race race;
+    
+    private ArrayList<Cheval> parents;
+    
 
     public Cheval() {
     }
@@ -41,5 +45,21 @@ public class Cheval {
     }
     public void setRace(Race race) {
         this.race = race;
+    }
+
+    public ArrayList<Cheval> getParents() {
+        return parents;
+    }
+
+    public void setParents(ArrayList<Cheval> parents) {
+        this.parents = parents;
+    }
+    
+       public void addParent (Cheval unParent){
+        if (parents ==null ){
+            parents = new ArrayList<Cheval>();
+        }
+        parents.add(unParent);
+    
     }
 }
