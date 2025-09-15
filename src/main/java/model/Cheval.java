@@ -46,11 +46,20 @@ public class Cheval {
     public void setRace(Race race) {
         this.race = race;
     }
+
     public ArrayList<Cheval> getParents() {
         return parents;
     }
 
-    public void addParent(Cheval parent) {
-        parents.add(parent);
+    public void setParents(ArrayList<Cheval> parents) {
+        this.parents = parents;
+    }
+    
+       public void addParent (Cheval unParent){
+        if (parents ==null ){
+            parents = new ArrayList<Cheval>();
+        }
+        parents.add(unParent);
+    
     }
 }
