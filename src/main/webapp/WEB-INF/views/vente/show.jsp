@@ -87,7 +87,7 @@
                             <tr>
                                 <td><%= lot.getId() %></td>
                                 <td><%= lot.getPrixDepart() %></td>
-                                <td><%= lot.getCheval() != null ? lot.getCheval().getNom() : "Non renseigné" %></td>
+                                <td><a href="<%= request.getContextPath() %>/cheval-servlet/show?idCheval=<%= lot.getCheval().getId() %>"><%= lot.getCheval().getNom() %></a></td>
                             </tr>
                             <% } %>
                         </tbody>
