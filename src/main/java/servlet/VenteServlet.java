@@ -9,6 +9,7 @@ import java.util.logging.Logger;
 
 import database.DaoVente;
 import database.DaoLieu;
+import database.DaoLot;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
@@ -16,6 +17,7 @@ import jakarta.servlet.annotation.*;
 import model.Vente;
 import model.Lieu;
 import java.time.LocalDate;
+import model.Lot;
 
 @WebServlet(name = "venteServlet", value = "/vente-servlet/*")
 public class VenteServlet extends HttpServlet {
@@ -48,6 +50,8 @@ public class VenteServlet extends HttpServlet {
                 Vente laVente = DaoVente.getLaVente(cnx, idVente);
 
                 if (laVente != null) {
+                    ArrayList<Lot> lesLots = DaoLot.getLesLotsParVente(cnx, idVente);
+                    laVente.setLesLots(lesLots);
                     request.setAttribute("pLaVente", laVente);
                     this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/show.jsp").forward(request, response);
                 } else {

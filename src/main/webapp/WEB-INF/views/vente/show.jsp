@@ -1,11 +1,11 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ page import="model.Vente" %>
+<%@ page import="model.Vente, model.Lot" %>
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-    <title>Equida - Détails du vente</title>
+    <title>Equida - Détails de la vente</title>
     <link rel="stylesheet" 
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
@@ -23,6 +23,7 @@
         .detail-row { margin-bottom: 15px; }
         .detail-label { font-weight: bold; color: #555; }
         .detail-value { padding-top: 7px; }
+        h3 { margin-top: 30px; }
     </style>
 </head>
 <body>
@@ -44,7 +45,7 @@
                     Vente laVente = (Vente)request.getAttribute("pLaVente");
                     if(laVente != null) {
                 %>
-                    <h2>Détails du vente : <%= laVente.getNom() %></h2>
+                    <h2>Détails de la vente : <%= laVente.getNom() %></h2>
                     
                     <div class="row detail-row">
                         <div class="col-sm-3 detail-label">Identifiant</div>
@@ -66,9 +67,34 @@
                     <div class="row detail-row">
                         <div class="col-sm-3 detail-label">Lieu</div>
                         <div class="col-sm-9 detail-value">
-                            <%= laVente.getLieu() != null ? laVente.getLieu().getVille() : "Non renseignée" %>
+                            <%= laVente.getLieu() != null ? laVente.getLieu().getVille() : "Non renseigné" %>
                         </div>
                     </div>
+                    <h3>Lots associés</h3>
+                    <%
+                        if(laVente.getLesLots() != null && !laVente.getLesLots().isEmpty()) {
+                    %>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>ID Lot</th>
+                                <th>Prix départ</th>
+                                <th>Nom du cheval</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for(Lot lot : laVente.getLesLots()) { %>
+                            <tr>
+                                <td><%= lot.getId() %></td>
+                                <td><%= lot.getPrixDepart() %></td>
+                                <td><%= lot.getCheval() != null ? lot.getCheval().getNom() : "Non renseigné" %></td>
+                            </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                    <% } else { %>
+                        <div class="alert alert-info">Aucun lot associé à cette vente.</div>
+                    <% } %>
 
                     <div class="row" style="margin-top: 30px;">
                         <div class="col-sm-offset-3 col-sm-9">
