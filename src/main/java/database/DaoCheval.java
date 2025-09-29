@@ -27,7 +27,8 @@ public class DaoCheval {
                 "r.id as r_id, r.nom as r_nom " +
                 "FROM cheval c " +
                 "INNER JOIN race r ON c.race_id = r.id"
-            );
+);
+
             resultatRequete = requeteSql.executeQuery();
             while (resultatRequete.next()) {
                 Cheval c = new Cheval();
@@ -61,7 +62,8 @@ public class DaoCheval {
                 "FROM cheval c " +
                 "INNER JOIN race r ON c.race_id = r.id " +
                 "WHERE c.id = ?"
-            );
+);
+
             requeteSql.setInt(1, idCheval);
             resultatRequete = requeteSql.executeQuery();
             if (resultatRequete.next()) {
