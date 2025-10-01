@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.ChevalCourse;
 import model.Course;
 
 public class DaoCheval {
@@ -84,8 +85,8 @@ public class DaoCheval {
     }
         
 
-    public static ArrayList<Course> getLesCoursesByCheval(Connection cnx, int idCheval) {
-        ArrayList<Course> lesCourses = new ArrayList<>();
+    public static ArrayList<ChevalCourse> getLesCoursesByCheval(Connection cnx, int idCheval) {
+        ArrayList<ChevalCourse> lesChevauxCourses = new ArrayList<>();
         try {
             requeteSql = cnx.prepareStatement(
                 "SELECT co.id as co_id, co.nom as co_nom, co.lieu as co_lieu, co.dateCourse as co_date, " +
@@ -105,16 +106,20 @@ public class DaoCheval {
                 course.setNom(resultatRequete.getString("co_nom"));
                 course.setLieu(resultatRequete.getString("co_lieu"));
                 course.setDate(resultatRequete.getString("co_date"));
-            
+                
+                ChevalCourse chevalcourse = new ChevalCourse();
+                chevalcourse.setCourse(course);
+                chevalcourse.setPosition(resultatRequete.getInt("cc_resultat"));
+                            
 
-                lesCourses.add(course);
+                lesChevauxCourses.add(chevalcourse);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("La requête de getLesCoursesByCheval a généré une exception SQL");
         }
-    return lesCourses;
+    return lesChevauxCourses;
     }
     /**
      * Ajoute un nouveau cheval dans la base de données
