@@ -16,6 +16,8 @@ import jakarta.servlet.annotation.*;
 import model.Cheval;
 import model.Race;
 import java.time.LocalDate;
+import model.ChevalCourse;
+import model.Course;
 
 @WebServlet(name = "chevalServlet", value = "/cheval-servlet/*")
 public class ChevalServlet extends HttpServlet {
@@ -46,16 +48,18 @@ public class ChevalServlet extends HttpServlet {
             try {
                 int idCheval = Integer.parseInt(request.getParameter("idCheval"));
                 Cheval leCheval = DaoCheval.getLeCheval(cnx, idCheval);
+                ArrayList<ChevalCourse> lesChevauxCourses = DaoCheval.getLesCoursesByCheval(cnx, idCheval);
 
                 if (leCheval != null) {
                     request.setAttribute("pLeCheval", leCheval);
+                    request.setAttribute("pLesChevauxCourses", lesChevauxCourses);
                     this.getServletContext().getRequestDispatcher("/WEB-INF/views/cheval/show.jsp").forward(request, response);
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/cheval-servlet/lister");
+                    response.sendRedirect(request.getContextPath() + "/cheval-servlet/list");
                 }
             } catch (NumberFormatException e) {
                 System.out.println("Erreur : l'id du cheval n'est pas un nombre valide");
-                response.sendRedirect(request.getContextPath() + "/cheval-servlet/lister");
+                response.sendRedirect(request.getContextPath() + "/cheval-servlet/list");
             }
 
         }

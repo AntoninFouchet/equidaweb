@@ -1,5 +1,8 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ page import="model.Cheval" %>
+<%@ page import="model.Course" %>
+<%@ page import="model.ChevalCourse" %>
+<%@ page import="java.util.ArrayList" %>
 
 <!DOCTYPE html>
 <html>
@@ -11,12 +14,8 @@
               integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
               crossorigin="anonymous">
         <style>
-            body { 
-                padding-top: 50px; 
-            }
-            .special { 
-                padding-top: 50px; 
-            }
+            body { padding-top: 50px; }
+            .special { padding-top: 50px; }
             .form-container {
                 background-color: #f8f9fa;
                 border-radius: 5px;
@@ -24,16 +23,9 @@
                 margin-top: 20px;
                 box-shadow: 0 2px 4px rgba(0,0,0,0.1);
             }
-            .detail-row {
-                margin-bottom: 15px;
-            }
-            .detail-label {
-                font-weight: bold;
-                color: #555;
-            }
-            .detail-value {
-                padding-top: 7px;
-            }
+            .detail-row { margin-bottom: 15px; }
+            .detail-label { font-weight: bold; color: #555; }
+            .detail-value { padding-top: 7px; }
         </style>
     </head>
     <body>
@@ -49,10 +41,11 @@
 
         <div class="container special">
             <div class="row">
-                <div class="col-md-8 col-md-offset-2">
+                <div class="col-md-10 col-md-offset-1">
                     <div class="form-container">
                         <% 
                             Cheval leCheval = (Cheval)request.getAttribute("pLeCheval");
+                            ArrayList<Course> lesCourses = (ArrayList<Course>)request.getAttribute("pLesCourses");
                             if(leCheval != null) {
                         %>
                             <h2>Détails du cheval : <%= leCheval.getNom() %></h2>
@@ -81,12 +74,50 @@
                                 </div>
                             </div>
 
+                       
+                            <!-- 🔹 Tableau des courses -->
+
+                            <h3 style="margin-top:40px;">Courses de <%= leCheval.getNom() %></h3>
+
+
+                            <%
+                                ArrayList<model.ChevalCourse> lesChevauxCourses =
+                                    (ArrayList<model.ChevalCourse>) request.getAttribute("pLesChevauxCourses");
+                            %>
+
+                            <% if (lesChevauxCourses != null && !lesChevauxCourses.isEmpty()) { %>
+                                 <table class="table table-striped table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Lieu</th>
+                                            <th>Date</th>
+                                            <th>Position</th>
+                                        </tr>
+                                    </thead>
+                                <tbody>
+                                <% for (model.ChevalCourse cc : lesChevauxCourses) { %>
+                                <tr>
+                                    <td><%= cc.getCourse().getNom() %></td>
+                                    <td><%= cc.getCourse().getLieu() %></td>
+                                    <td><%= cc.getCourse().getDate() %></td>
+                                    <td><%= cc.getPosition() %></td>
+                                </tr>
+                                <% } %>
+                                </tbody>
+                                </table>
+                            <% } else { %>
+                            <div class="alert alert-info">
+                            Ce cheval n'a pas encore participé à une course.
+                            </div>
+                            <% } %>
+
+
                             <div class="row" style="margin-top: 30px;">
                                 <div class="col-sm-offset-3 col-sm-9">
                                     <a href="<%= request.getContextPath() %>/cheval-servlet/list" class="btn btn-default">
                                         <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste
                                     </a>
-                                    <!-- Vous pouvez ajouter d'autres boutons ici, comme Modifier ou Supprimer -->
                                 </div>
                             </div>
                         <% } else { %>
