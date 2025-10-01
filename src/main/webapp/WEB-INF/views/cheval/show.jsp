@@ -45,11 +45,13 @@
                     <div class="form-container">
                         <% 
                             Cheval leCheval = (Cheval)request.getAttribute("pLeCheval");
-                            ArrayList<Course> lesCourses = (ArrayList<Course>)request.getAttribute("pLesCourses");
+                            ArrayList<model.ChevalCourse> lesChevauxCourses =
+                                (ArrayList<model.ChevalCourse>) request.getAttribute("pLesChevauxCourses");
                             if(leCheval != null) {
                         %>
                             <h2>Détails du cheval : <%= leCheval.getNom() %></h2>
-                            
+
+                            <!-- Informations du cheval -->
                             <div class="row detail-row">
                                 <div class="col-sm-3 detail-label">Identifiant</div>
                                 <div class="col-sm-9 detail-value"><%= leCheval.getId() %></div>
@@ -74,19 +76,25 @@
                                 </div>
                             </div>
 
-                       
-                            <!-- 🔹 Tableau des courses -->
+                            <!-- Parents -->
+                            <div class="row detail-row">
+                                <div class="col-sm-3 detail-label">Père</div>
+                                <div class="col-sm-9 detail-value">
+                                    <%= leCheval.getChevalpere() != null ? leCheval.getChevalpere().getNom() : "Non renseigné" %>
+                                </div>
+                            </div>
 
+                            <div class="row detail-row">
+                                <div class="col-sm-3 detail-label">Mère</div>
+                                <div class="col-sm-9 detail-value">
+                                    <%= leCheval.getChevalmere() != null ? leCheval.getChevalmere().getNom() : "Non renseignée" %>
+                                </div>
+                            </div>
+
+                            <!-- Tableau des courses -->
                             <h3 style="margin-top:40px;">Courses de <%= leCheval.getNom() %></h3>
-
-
-                            <%
-                                ArrayList<model.ChevalCourse> lesChevauxCourses =
-                                    (ArrayList<model.ChevalCourse>) request.getAttribute("pLesChevauxCourses");
-                            %>
-
                             <% if (lesChevauxCourses != null && !lesChevauxCourses.isEmpty()) { %>
-                                 <table class="table table-striped table-bordered">
+                                <table class="table table-striped table-bordered">
                                     <thead>
                                         <tr>
                                             <th>Nom</th>
@@ -95,24 +103,24 @@
                                             <th>Position</th>
                                         </tr>
                                     </thead>
-                                <tbody>
-                                <% for (model.ChevalCourse cc : lesChevauxCourses) { %>
-                                <tr>
-                                    <td><%= cc.getCourse().getNom() %></td>
-                                    <td><%= cc.getCourse().getLieu() %></td>
-                                    <td><%= cc.getCourse().getDate() %></td>
-                                    <td><%= cc.getPosition() %></td>
-                                </tr>
-                                <% } %>
-                                </tbody>
+                                    <tbody>
+                                        <% for (model.ChevalCourse cc : lesChevauxCourses) { %>
+                                            <tr>
+                                                <td><%= cc.getCourse().getNom() %></td>
+                                                <td><%= cc.getCourse().getLieu() %></td>
+                                                <td><%= cc.getCourse().getDate() %></td>
+                                                <td><%= cc.getPosition() %></td>
+                                            </tr>
+                                        <% } %>
+                                    </tbody>
                                 </table>
                             <% } else { %>
-                            <div class="alert alert-info">
-                            Ce cheval n'a pas encore participé à une course.
-                            </div>
+                                <div class="alert alert-info">
+                                    Ce cheval n'a pas encore participé à une course.
+                                </div>
                             <% } %>
 
-
+                            <!-- Bouton retour -->
                             <div class="row" style="margin-top: 30px;">
                                 <div class="col-sm-offset-3 col-sm-9">
                                     <a href="<%= request.getContextPath() %>/cheval-servlet/list" class="btn btn-default">
@@ -120,6 +128,7 @@
                                     </a>
                                 </div>
                             </div>
+
                         <% } else { %>
                             <div class="alert alert-danger">
                                 Le cheval demandé n'existe pas.
@@ -132,7 +141,7 @@
                 </div>
             </div>
         </div>
-        
+
         <!-- Bootstrap JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
     </body>
