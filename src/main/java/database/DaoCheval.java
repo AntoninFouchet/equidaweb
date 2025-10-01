@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import model.Course;
 
 public class DaoCheval {
     Connection cnx;
@@ -80,6 +81,40 @@ public class DaoCheval {
             System.out.println("La requête de getLeCheval a généré une exception SQL");
         }
         return cheval;
+    }
+        
+
+    public static ArrayList<Course> getLesCoursesByCheval(Connection cnx, int idCheval) {
+        ArrayList<Course> lesCourses = new ArrayList<>();
+        try {
+            requeteSql = cnx.prepareStatement(
+                "SELECT co.id as co_id, co.nom as co_nom, co.lieu as co_lieu, co.dateCourse as co_date, " +
+                "cc.resultat as cc_resultat " +
+                "FROM course co " +
+                "JOIN cheval_course cc ON co.id = cc.course_id " +
+                "JOIN cheval c ON cc.cheval_id = c.id " +
+                "WHERE c.id = ?"
+            );
+            requeteSql.setInt(1, idCheval);
+
+            resultatRequete = requeteSql.executeQuery();
+
+            while (resultatRequete.next()) {
+                Course course = new Course();
+                course.setId(resultatRequete.getInt("co_id"));
+                course.setNom(resultatRequete.getString("co_nom"));
+                course.setLieu(resultatRequete.getString("co_lieu"));
+                course.setDate(resultatRequete.getString("co_date"));
+            
+
+                lesCourses.add(course);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("La requête de getLesCoursesByCheval a généré une exception SQL");
+        }
+    return lesCourses;
     }
     /**
      * Ajoute un nouveau cheval dans la base de données
