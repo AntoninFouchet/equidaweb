@@ -13,7 +13,10 @@ public class Cheval {
     
     private ArrayList<Cheval> parents;
     
-
+    private Cheval chevalpere;
+    private Cheval chevalmere;
+    
+    
     public Cheval() {
     }
 
@@ -62,4 +65,21 @@ public class Cheval {
         parents.add(unParent);
     
     }
+
+    public Cheval getChevalpere() {
+        return chevalpere;
+    }
+
+    public Cheval getChevalmere() {
+        return chevalmere;
+    }
+
+    public void setChevalpere(Cheval chevalpere) {
+        this.chevalpere = chevalpere;
+    }
+
+    public void setChevalmere(Cheval chevalmere) {
+        this.chevalmere = chevalmere;
+    }
+    
 }
