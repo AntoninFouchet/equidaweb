@@ -40,8 +40,8 @@ public class VenteServlet extends HttpServlet {
         System.out.println("PathInfo: " + path);
 
         if ("/list".equals(path)) {
-            ArrayList<Vente> lesChevaux = DaoVente.getLesVentes(cnx);
-            request.setAttribute("pLesVentes", lesChevaux);
+            ArrayList<Vente> lesVentes = DaoVente.getLesVentes(cnx);
+            request.setAttribute("pLesVentes", lesVentes);
             this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/list.jsp").forward(request, response);
         }
         if ("/show".equals(path)) {
@@ -82,7 +82,7 @@ public class VenteServlet extends HttpServlet {
                 // Récupération des données du formulaire
                 String nom = request.getParameter("nom");
                 String dateDebutVenteStr = request.getParameter("dateDebutVente");
-                int raceId = Integer.parseInt(request.getParameter("lieu"));
+                int lieuId = Integer.parseInt(request.getParameter("lieu"));
 
                 // Création d'un nouveau vente
                 Vente nouvelleVente = new Vente();
@@ -96,7 +96,7 @@ public class VenteServlet extends HttpServlet {
                 }
 
                 // Récupération et attribution du lieu
-                Lieu lieu = DaoLieu.getLieuById(cnx, raceId);
+                Lieu lieu = DaoLieu.getLieuById(cnx, lieuId);
                 if (lieu != null) {
                     nouvelleVente.setLieu(lieu);
                 } else {
