@@ -20,7 +20,7 @@ public class DaoLieu {
         ArrayList<Lieu> lesLieux = new ArrayList<Lieu>();
         try {
             requeteSql = cnx.prepareStatement(
-                "SELECT id, nom FROM race ORDER BY nom"
+                    "SELECT id AS l_id, ville AS l_ville, nbBoxes AS l_nbBoxes, commentaires AS l_commentaires FROM lieu ORDER BY ville"
             );
             resultatRequete = requeteSql.executeQuery();
             while (resultatRequete.next()) {
@@ -48,7 +48,7 @@ public class DaoLieu {
         Lieu lieu = null;
         try {
             requeteSql = cnx.prepareStatement(
-                "SELECT id, nom FROM lieu WHERE id = ?"
+                    "SELECT id AS l_id, ville AS l_ville, nbBoxes AS l_nbBoxes, commentaires AS l_commentaires FROM lieu WHERE id = ?"
             );
             requeteSql.setInt(1, id);
             resultatRequete = requeteSql.executeQuery();

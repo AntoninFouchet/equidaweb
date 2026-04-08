@@ -92,7 +92,8 @@ public class VenteServlet extends HttpServlet {
                 // Gestion de la date de debut de vente (en String)
 
                 if (dateDebutVenteStr != null && !dateDebutVenteStr.isEmpty()) {
-                nouvelleVente.setDateDebutVente(dateDebutVenteStr);
+                LocalDate dateDebutVente = LocalDate.parse(dateDebutVenteStr);
+                nouvelleVente.setDateDebutVente(dateDebutVente);
                 }
 
                 // Récupération et attribution du lieu
