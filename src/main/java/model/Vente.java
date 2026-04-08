@@ -1,30 +1,26 @@
 package model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+
 public class Vente {
 
     private int id;
     private String nom;
-    private String dateDebutVente;
+    private LocalDate dateDebutVente;
     private CategVente categVente;
     private Lieu lieu;
-    private Lot lot;
-    
-    private ArrayList<Lot> lesLots ;
+
+    private ArrayList<Lot> lesLots;
 
     public Vente() {
     }
-    
-    public Vente(String dateDebutVente) {
-        this.dateDebutVente = dateDebutVente;
-    }
 
-    public Vente(int id, String nom, String dateDebutVente) {
+    public Vente(int id, String nom, LocalDate dateDebutVente) {
         this.id = id;
         this.nom = nom;
         this.dateDebutVente = dateDebutVente;
     }
-
 
     public int getId() {
         return id;
@@ -42,32 +38,31 @@ public class Vente {
         this.nom = nom;
     }
 
-    public String getDateDebutVente() {
+    public LocalDate getDateDebutVente() {
         return dateDebutVente;
     }
 
-    public void setDateDebutVente(String dateDebutVente) {
+    public void setDateDebutVente(LocalDate dateDebutVente) {
         this.dateDebutVente = dateDebutVente;
     }
+
     public CategVente getCategVente() {
         return categVente;
     }
+
     public void setCategVente(CategVente categVente) {
         this.categVente = categVente;
     }
+
     public Lieu getLieu() {
         return lieu;
     }
+
     public void setLieu(Lieu lieu) {
-    this.lieu = lieu;
+        this.lieu = lieu;
     }
-    public Lot getlot() {
-        return lot;
-    }
-    public void setLot(Lot lot) {
-        this.lot = lot;
-    }
-    
+
+    // La gestion de la liste des Lots
     public ArrayList<Lot> getLesLots() {
         return lesLots;
     }
@@ -75,10 +70,12 @@ public class Vente {
     public void setLesLots(ArrayList<Lot> lesLots) {
         this.lesLots = lesLots;
     }
+
     public void addLot(Lot unLot){
-        if (lesLots ==null ){
+        if (lesLots == null){
             lesLots = new ArrayList<Lot>();
         }
         lesLots.add(unLot);
     }
+
 }

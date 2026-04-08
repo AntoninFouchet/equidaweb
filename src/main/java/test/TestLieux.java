@@ -6,7 +6,7 @@ package test;
 
 import model.Lieu;
 import model.Vente;
-
+import java.time.LocalDate;
 /**
  *
  * @author sio2
@@ -24,7 +24,7 @@ public class TestLieux {
         Vente v = new Vente();
         v.setId(2);
         v.setNom("nom");
-        v.setDateDebutVente("2020-12-6");       
+        v.setDateDebutVente(LocalDate.parse("2020-12-6"));
         
         
         l.addVente(v);

@@ -20,7 +20,7 @@ public class DaoLot {
                 "SELECT v.id as v_id, v.nom as v_nom, v.dateDebutVente as v_dateDebutVente, " +
                 "l.id as lot_id, l.prixDepart as lot_prix, " +
                 "c.id as cheval_id, c.nom as cheval_nom, c.dateNaissance as cheval_dateNaissance, " +
-                "r.nom as race_nom " +
+                "r.libelle as race_libelle " +
                 "FROM lot l " +
                 "JOIN vente v ON l.vente_id = v.id " +
                 "JOIN cheval c ON l.cheval_id = c.id " +
@@ -35,7 +35,11 @@ public class DaoLot {
                 Vente v = new Vente();
                 v.setId(resultatRequete.getInt("v_id"));
                 v.setNom(resultatRequete.getString("v_nom"));
-                v.setDateDebutVente(resultatRequete.getString("v_dateDebutVente"));
+
+                java.sql.Date dateVenteSQL = resultatRequete.getDate("v_dateDebutVente");
+                if (dateVenteSQL != null) {
+                    v.setDateDebutVente(dateVenteSQL.toLocalDate());
+                }
 
                 Lot lot = new Lot();
                 lot.setId(resultatRequete.getInt("lot_id"));
@@ -44,11 +48,11 @@ public class DaoLot {
                 Cheval c = new Cheval();
                 c.setId(resultatRequete.getInt("cheval_id"));
                 c.setNom(resultatRequete.getString("cheval_nom"));
-                
+
                 Race r = new Race();
-                r.setNom(resultatRequete.getString("race_nom"));
-                
-                
+                r.setNom(resultatRequete.getString("race_libelle"));
+
+
                 c.setRace(r);
                 lot.setCheval(c);
                 lot.setVente(v);

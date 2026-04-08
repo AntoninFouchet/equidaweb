@@ -9,6 +9,7 @@ import model.CategVente;
 import model.Lieu;
 import model.Lot;
 import model.Vente;
+import java.time.LocalDate;
 
 /**
  *
@@ -34,7 +35,7 @@ public class TestVente {
         Vente v1 = new Vente();
         v1.setId(2);
         v1.setNom("testVente");
-        v1.setDateDebutVente("2024-06-18");
+        v1.setDateDebutVente(LocalDate.parse("2024-06-18"));
       
         v1.addLot(lo);
         
