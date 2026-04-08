@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 01 oct. 2025 à 09:26
+-- Généré le : mer. 08 avr. 2026 à 08:37
 -- Version du serveur : 11.3.2-MariaDB
 -- Version de PHP : 8.2.18
 
@@ -79,27 +79,30 @@ CREATE TABLE IF NOT EXISTS `cheval` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) DEFAULT NULL,
   `sexe` enum('M','F','G') DEFAULT 'M',
+  `sire` varchar(50) DEFAULT NULL,
   `pere_id` int(11) DEFAULT NULL,
   `mere_id` int(11) DEFAULT NULL,
   `dateNaissance` date DEFAULT NULL,
   `race_id` int(11) NOT NULL,
+  `vendeur_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_cheval_sire` (`pere_id`),
+  KEY `idx_cheval_pere` (`pere_id`),
   KEY `idx_cheval_mere` (`mere_id`),
   KEY `idx_cheval_race` (`race_id`),
-  KEY `idx_cheval_nom` (`nom`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  KEY `idx_cheval_vendeur` (`vendeur_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `cheval`
 --
 
-INSERT INTO `cheval` (`id`, `nom`, `sexe`, `pere_id`, `mere_id`, `dateNaissance`, `race_id`) VALUES
-(5, 'Eclair', 'M', NULL, 9, '2020-04-15', 1),
-(6, 'Perle', 'F', NULL, 9, '2019-06-22', 2),
-(7, 'Tonnerre', 'M', 5, 6, '2021-05-10', 1),
-(8, 'Luna', 'F', 5, 6, '2022-07-03', 3),
-(9, 'Bella', 'F', NULL, NULL, '2018-03-12', 4);
+INSERT INTO `cheval` (`id`, `nom`, `sexe`, `sire`, `pere_id`, `mere_id`, `dateNaissance`, `race_id`, `vendeur_id`) VALUES
+(5, 'Eclair', 'M', '1111.222.333A', NULL, 9, '2020-04-15', 1, 1),
+(6, 'Perle', 'F', '4444.555.666B', NULL, 9, '2019-06-22', 2, 2),
+(7, 'Tonnerre', 'M', '7777.888.999C', 5, 6, '2021-05-10', 1, 3),
+(8, 'Luna', 'F', '0000.111.222D', 5, 6, '2022-07-03', 3, 4),
+(9, 'Bella', 'F', '3333.444.555E', NULL, NULL, '2018-03-12', 4, 5),
+(10, 'test', 'M', NULL, NULL, NULL, '2022-06-30', 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -113,7 +116,6 @@ CREATE TABLE IF NOT EXISTS `cheval_course` (
   `course_id` int(11) NOT NULL,
   `resultat` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`cheval_id`,`course_id`),
-  KEY `idx_cc_cheval` (`cheval_id`),
   KEY `idx_cc_course` (`course_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -145,20 +147,19 @@ CREATE TABLE IF NOT EXISTS `client` (
   `nom` varchar(150) NOT NULL,
   `prenom` varchar(150) DEFAULT NULL,
   `rue` varchar(255) DEFAULT NULL,
-  `code_postal` varchar(20) DEFAULT NULL,
+  `copos` varchar(20) DEFAULT NULL,
   `ville` varchar(150) DEFAULT NULL,
-  `adresse_messagerie` varchar(255) DEFAULT NULL,
+  `adresseMessagerie` varchar(255) DEFAULT NULL,
   `pays_code` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `idx_client_pays` (`pays_code`),
-  KEY `idx_client_ville` (`ville`)
+  KEY `idx_client_pays` (`pays_code`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `client`
 --
 
-INSERT INTO `client` (`id`, `titre`, `nom`, `prenom`, `rue`, `code_postal`, `ville`, `adresse_messagerie`, `pays_code`) VALUES
+INSERT INTO `client` (`id`, `titre`, `nom`, `prenom`, `rue`, `copos`, `ville`, `adresseMessagerie`, `pays_code`) VALUES
 (1, 'M.', 'Dupont', 'Jean', '12 rue des Lilas', '75001', 'Paris', 'jean.dupont@example.com', 'FR'),
 (2, 'Mme', 'Martin', 'Sophie', '5 avenue de la République', '69002', 'Lyon', 'sophie.martin@example.com', 'FR'),
 (3, 'M.', 'Durand', 'Pierre', '20 boulevard Saint-Michel', '31000', 'Toulouse', 'pierre.durand@example.com', 'FR'),
@@ -174,7 +175,7 @@ INSERT INTO `client` (`id`, `titre`, `nom`, `prenom`, `rue`, `code_postal`, `vil
 DROP TABLE IF EXISTS `courriel`;
 CREATE TABLE IF NOT EXISTS `courriel` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `dateEnvoi` datetime DEFAULT NULL,
+  `date` datetime DEFAULT NULL,
   `objet` varchar(255) DEFAULT NULL,
   `corps` text DEFAULT NULL,
   `vente_id` int(11) DEFAULT NULL,
@@ -186,11 +187,11 @@ CREATE TABLE IF NOT EXISTS `courriel` (
 -- Déchargement des données de la table `courriel`
 --
 
-INSERT INTO `courriel` (`id`, `dateEnvoi`, `objet`, `corps`, `vente_id`) VALUES
-(1, '2025-03-01 00:00:00', 'Grande Vente Printemps - Invitation', 'Cher client, nous vous invitons à notre Grande Vente Printemps le 15 mars 2025.', 5),
-(2, '2025-06-01 00:00:00', 'Vente Prestige - Réservation', 'Ne manquez pas notre Vente Prestige du 10 juin 2025. Réservez dès maintenant votre place.', 6),
-(3, '2025-07-01 00:00:00', 'Enchères d’Été', 'Participez aux Enchères d’Été le 5 juillet 2025 et découvrez des lots exceptionnels.', 7),
-(4, '2025-09-10 00:00:00', 'Vente en Ligne Automne', 'La Vente en Ligne Automne commence le 20 septembre 2025. Connectez-vous pour participer.', 8);
+INSERT INTO `courriel` (`id`, `date`, `objet`, `corps`, `vente_id`) VALUES
+(1, '2025-03-01 00:00:00', 'Grande Vente Printemps - Invitation', 'Cher client, nous vous invitons...', 5),
+(2, '2025-06-01 00:00:00', 'Vente Prestige - Réservation', 'Ne manquez pas notre Vente Prestige...', 6),
+(3, '2025-07-01 00:00:00', 'Enchères d’Été', 'Participez aux Enchères d’Été...', 7),
+(4, '2025-09-10 00:00:00', 'Vente en Ligne Automne', 'La Vente en Ligne Automne commence...', 8);
 
 -- --------------------------------------------------------
 
@@ -203,7 +204,7 @@ CREATE TABLE IF NOT EXISTS `course` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) DEFAULT NULL,
   `lieu` varchar(255) DEFAULT NULL,
-  `dateCourse` date DEFAULT NULL,
+  `date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -211,7 +212,7 @@ CREATE TABLE IF NOT EXISTS `course` (
 -- Déchargement des données de la table `course`
 --
 
-INSERT INTO `course` (`id`, `nom`, `lieu`, `dateCourse`) VALUES
+INSERT INTO `course` (`id`, `nom`, `lieu`, `date`) VALUES
 (1, 'Grand Prix de Paris', 'Paris', '2023-06-15'),
 (2, 'Coupe de Normandie', 'Deauville', '2023-07-20'),
 (3, 'Trophée du Midi', 'Toulouse', '2023-09-05'),
@@ -228,24 +229,23 @@ CREATE TABLE IF NOT EXISTS `enchere` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `numero` int(11) DEFAULT NULL,
   `montant` decimal(12,2) NOT NULL,
-  `dateEnchere` datetime DEFAULT current_timestamp(),
   `acheteur_id` int(11) NOT NULL,
   `lot_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_enchere_acheteur` (`acheteur_id`),
   KEY `idx_enchere_lot` (`lot_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `enchere`
 --
 
-INSERT INTO `enchere` (`id`, `numero`, `montant`, `dateEnchere`, `acheteur_id`, `lot_id`) VALUES
-(5, 1, 5000.00, '2025-03-15 00:00:00', 1, 11),
-(6, 2, 3500.00, '2025-03-15 00:00:00', 2, 12),
-(7, 1, 7000.00, '2025-06-10 00:00:00', 3, 13),
-(8, 2, 4500.00, '2025-07-05 00:00:00', 4, 14),
-(9, 1, 6000.00, '2025-09-20 00:00:00', 5, 15);
+INSERT INTO `enchere` (`id`, `numero`, `montant`, `acheteur_id`, `lot_id`) VALUES
+(5, 1, 5000.00, 1, 11),
+(6, 2, 3500.00, 2, 12),
+(7, 1, 7000.00, 3, 13),
+(8, 2, 4500.00, 4, 14),
+(9, 1, 6000.00, 5, 15);
 
 -- --------------------------------------------------------
 
@@ -286,7 +286,6 @@ CREATE TABLE IF NOT EXISTS `lot` (
   `cheval_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_lot_vente` (`vente_id`),
-  KEY `idx_lot_prix` (`prixDepart`),
   KEY `fk_lot_cheval` (`cheval_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
@@ -362,7 +361,7 @@ INSERT INTO `piecejointe` (`id`, `chemin`, `description`, `courriel_id`) VALUES
 DROP TABLE IF EXISTS `race`;
 CREATE TABLE IF NOT EXISTS `race` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `nom` varchar(100) DEFAULT NULL,
+  `libelle` varchar(100) DEFAULT NULL,
   `description` text DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -371,7 +370,7 @@ CREATE TABLE IF NOT EXISTS `race` (
 -- Déchargement des données de la table `race`
 --
 
-INSERT INTO `race` (`id`, `nom`, `description`) VALUES
+INSERT INTO `race` (`id`, `libelle`, `description`) VALUES
 (1, 'Pur-sang', 'Cheval de course rapide'),
 (2, 'Arabe', 'Race très ancienne, endurante'),
 (3, 'Frison', 'Cheval élégant, souvent noir'),
@@ -411,13 +410,12 @@ DROP TABLE IF EXISTS `vente`;
 CREATE TABLE IF NOT EXISTS `vente` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nom` varchar(255) DEFAULT NULL,
-  `dateDebutVente` varchar(10) DEFAULT NULL,
+  `dateDebutVente` date DEFAULT NULL,
   `categvente_code` varchar(50) DEFAULT NULL,
   `lieu_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_vente_categ` (`categvente_code`),
-  KEY `idx_vente_lieu` (`lieu_id`),
-  KEY `idx_vente_date` (`dateDebutVente`)
+  KEY `idx_vente_lieu` (`lieu_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
@@ -445,8 +443,9 @@ ALTER TABLE `acheteur`
 --
 ALTER TABLE `cheval`
   ADD CONSTRAINT `fk_cheval_mere` FOREIGN KEY (`mere_id`) REFERENCES `cheval` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+  ADD CONSTRAINT `fk_cheval_pere` FOREIGN KEY (`pere_id`) REFERENCES `cheval` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_cheval_race` FOREIGN KEY (`race_id`) REFERENCES `race` (`id`) ON UPDATE CASCADE,
-  ADD CONSTRAINT `fk_cheval_sire` FOREIGN KEY (`pere_id`) REFERENCES `cheval` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+  ADD CONSTRAINT `fk_cheval_vendeur` FOREIGN KEY (`vendeur_id`) REFERENCES `vendeur` (`client_id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `cheval_course`
