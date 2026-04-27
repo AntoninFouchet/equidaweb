@@ -10,6 +10,7 @@ public class Cheval {
     private LocalDate dateNaissance;
     private String sire;
     private Race race;
+    private String sexe;
     
     private ArrayList<Cheval> parents;
     
@@ -46,6 +47,8 @@ public class Cheval {
     }
     public String getSire() {return sire;}
     public void setSire(String sire) {this.sire = sire;}
+    public String getSexe() {return sexe;}
+    public void setSexe(String sexe) {this.sexe = sexe;}
 
     public ArrayList<Cheval> getParents() {
         return parents;
