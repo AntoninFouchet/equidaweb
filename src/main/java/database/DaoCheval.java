@@ -193,6 +193,8 @@ public class DaoCheval {
 
             requeteSql.setString(4, cheval.getSire());
 
+            requeteSql.setString(5, cheval.getSexe());
+
             int result = requeteSql.executeUpdate();
 
             if (result == 1) {
