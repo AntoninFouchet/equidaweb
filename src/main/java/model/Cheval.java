@@ -10,7 +10,7 @@ public class Cheval {
     private LocalDate dateNaissance;
     private String sire;
     private Race race;
-    private String sexe
+    private String sexe;
     
     private ArrayList<Cheval> parents;
     
