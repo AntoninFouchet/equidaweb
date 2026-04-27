@@ -82,6 +82,7 @@ public class ChevalServlet extends HttpServlet {
                 // Récupération des données du formulaire
                 String nom = request.getParameter("nom");
                 String sire = request.getParameter("sire");
+                String sexe = request.getParameter("sexe");
                 String dateNaissanceStr = request.getParameter("dateNaissance");
                 int raceId = Integer.parseInt(request.getParameter("race"));
 
@@ -89,6 +90,7 @@ public class ChevalServlet extends HttpServlet {
                 Cheval nouveauCheval = new Cheval();
                 nouveauCheval.setNom(nom);
                 nouveauCheval.setSire(sire);
+                nouveauCheval.setSexe(sexe);
 
                 // Gestion de la date de naissance
                 if (dateNaissanceStr != null && !dateNaissanceStr.isEmpty()) {
