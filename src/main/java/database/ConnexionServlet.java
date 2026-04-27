@@ -3,11 +3,13 @@ package database;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+@WebListener
 public class ConnexionServlet implements ServletContextListener {
 
     Connection cnx = null;
