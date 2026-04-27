@@ -2,19 +2,16 @@ package database;
 
 import model.Cheval;
 import model.Race;
+import model.ChevalCourse;
+import model.Course;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import model.ChevalCourse;
-import model.Course;
 
 public class DaoCheval {
-    Connection cnx;
-    static PreparedStatement requeteSql = null;
-    static ResultSet resultatRequete = null;
 
     /**
      * Récupère tous les chevaux présents dans la base de données avec leurs races associées
@@ -23,13 +20,17 @@ public class DaoCheval {
      */
     public static ArrayList<Cheval> getLesChevaux(Connection cnx) {
         ArrayList<Cheval> lesChevaux = new ArrayList<Cheval>();
+        // On déclare les objets SQL localement pour éviter les conflits entre utilisateurs
+        PreparedStatement requeteSql = null;
+        ResultSet resultatRequete = null;
+
         try {
             requeteSql = cnx.prepareStatement(
-                "SELECT c.id as c_id, c.nom as c_nom, " +
-                "r.id as r_id, r.libelle as r_libelle " +
-                "FROM cheval c " +
-                "INNER JOIN race r ON c.race_id = r.id"
-);
+                    "SELECT c.id as c_id, c.nom as c_nom, " +
+                            "r.id as r_id, r.libelle as r_libelle " +
+                            "FROM cheval c " +
+                            "INNER JOIN race r ON c.race_id = r.id"
+            );
 
             resultatRequete = requeteSql.executeQuery();
             while (resultatRequete.next()) {
@@ -45,6 +46,10 @@ public class DaoCheval {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("La requête de getLesChevaux a généré une exception SQL");
+        } finally {
+            // fermer les ressources après utilisation
+            try { if (resultatRequete != null) resultatRequete.close(); } catch (SQLException e) {}
+            try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
         }
         return lesChevaux;
     }
@@ -52,75 +57,87 @@ public class DaoCheval {
     /**
      * Récupère un cheval spécifique par son identifiant
      * @param cnx La connexion active à la base de données
-     * @param id L'identifiant du cheval recherché
+     * @param idCheval L'identifiant du cheval recherché
      * @return Cheval Le cheval trouvé ou null si non trouvé
      */
-public static Cheval getLeCheval(Connection cnx, int idCheval) {
-    Cheval cheval = null;
-    try {
-        // Requête pour récupérer le cheval avec sa race et ses parents
-        requeteSql = cnx.prepareStatement(
-            "SELECT c.id AS c_id, c.nom AS c_nom, c.dateNaissance AS c_dateNaissance, " +
-            "r.id AS r_id, r.libelle AS r_libelle, " +
-            "cpere.id AS pere_id, cpere.nom AS pere_nom, " +
-            "cmere.id AS mere_id, cmere.nom AS mere_nom " +
-            "FROM cheval c " +
-            "INNER JOIN race r ON c.race_id = r.id " +
-            "LEFT JOIN cheval cpere ON c.pere_id = cpere.id " +
-            "LEFT JOIN cheval cmere ON c.mere_id = cmere.id " +
-            "WHERE c.id = ?"
-        );
+    public static Cheval getLeCheval(Connection cnx, int idCheval) {
+        Cheval cheval = null;
+        PreparedStatement requeteSql = null;
+        ResultSet resultatRequete = null;
 
-        requeteSql.setInt(1, idCheval);
-        resultatRequete = requeteSql.executeQuery();
+        try {
+            // Requête pour récupérer le cheval avec sa race et ses parents
+            requeteSql = cnx.prepareStatement(
+                    "SELECT c.id AS c_id, c.nom AS c_nom, c.dateNaissance AS c_dateNaissance, " +
+                            "r.id AS r_id, r.libelle AS r_libelle, " +
+                            "cpere.id AS pere_id, cpere.nom AS pere_nom, " +
+                            "cmere.id AS mere_id, cmere.nom AS mere_nom " +
+                            "FROM cheval c " +
+                            "INNER JOIN race r ON c.race_id = r.id " +
+                            "LEFT JOIN cheval cpere ON c.pere_id = cpere.id " +
+                            "LEFT JOIN cheval cmere ON c.mere_id = cmere.id " +
+                            "WHERE c.id = ?"
+            );
 
-        if (resultatRequete.next()) {
-            cheval = new Cheval();
-            cheval.setId(resultatRequete.getInt("c_id"));
-            cheval.setNom(resultatRequete.getString("c_nom"));
+            requeteSql.setInt(1, idCheval);
+            resultatRequete = requeteSql.executeQuery();
 
-            Race race = new Race();
-            race.setId(resultatRequete.getInt("r_id"));
-            race.setNom(resultatRequete.getString("r_libelle"));
-            cheval.setRace(race);
+            if (resultatRequete.next()) {
+                cheval = new Cheval();
+                cheval.setId(resultatRequete.getInt("c_id"));
+                cheval.setNom(resultatRequete.getString("c_nom"));
 
-            int pereId = resultatRequete.getInt("pere_id");
-            if (!resultatRequete.wasNull()) {
-                Cheval pere = new Cheval();
-                pere.setId(pereId);
-                pere.setNom(resultatRequete.getString("pere_nom"));
-                cheval.setChevalpere(pere);
+                java.sql.Date dateN = resultatRequete.getDate("c_dateNaissance");
+                if (dateN != null) {
+                    cheval.setDateNaissance(dateN.toLocalDate());
+                }
+
+                Race race = new Race();
+                race.setId(resultatRequete.getInt("r_id"));
+                race.setNom(resultatRequete.getString("r_libelle"));
+                cheval.setRace(race);
+
+                int pereId = resultatRequete.getInt("pere_id");
+                if (!resultatRequete.wasNull()) {
+                    Cheval pere = new Cheval();
+                    pere.setId(pereId);
+                    pere.setNom(resultatRequete.getString("pere_nom"));
+                    cheval.setChevalpere(pere);
+                }
+
+                int mereId = resultatRequete.getInt("mere_id");
+                if (!resultatRequete.wasNull()) {
+                    Cheval mere = new Cheval();
+                    mere.setId(mereId);
+                    mere.setNom(resultatRequete.getString("mere_nom"));
+                    cheval.setChevalmere(mere);
+                }
             }
 
-            int mereId = resultatRequete.getInt("mere_id");
-            if (!resultatRequete.wasNull()) {
-                Cheval mere = new Cheval();
-                mere.setId(mereId);
-                mere.setNom(resultatRequete.getString("mere_nom"));
-                cheval.setChevalmere(mere);
-            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("La requête de getLeCheval a généré une exception SQL");
+        } finally {
+            try { if (resultatRequete != null) resultatRequete.close(); } catch (SQLException e) {}
+            try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
         }
 
-    } catch (SQLException e) {
-        e.printStackTrace();
-        System.out.println("La requête de getLeCheval a généré une exception SQL");
+        return cheval;
     }
-
-    return cheval;
-}
-
-
 
     public static ArrayList<ChevalCourse> getLesCoursesByCheval(Connection cnx, int idCheval) {
         ArrayList<ChevalCourse> lesChevauxCourses = new ArrayList<>();
+        PreparedStatement requeteSql = null;
+        ResultSet resultatRequete = null;
+
         try {
             requeteSql = cnx.prepareStatement(
-                "SELECT co.id as co_id, co.nom as co_nom, co.lieu as co_lieu, co.dateCourse as co_date, " +
-                "cc.resultat as cc_resultat " +
-                "FROM course co " +
-                "JOIN cheval_course cc ON co.id = cc.course_id " +
-                "JOIN cheval c ON cc.cheval_id = c.id " +
-                "WHERE c.id = ?"
+                    "SELECT co.id as co_id, co.nom as co_nom, co.lieu as co_lieu, co.dateCourse as co_date, " +
+                            "cc.resultat as cc_resultat " +
+                            "FROM course co " +
+                            "JOIN cheval_course cc ON co.id = cc.course_id " +
+                            "JOIN cheval c ON cc.cheval_id = c.id " +
+                            "WHERE c.id = ?"
             );
             requeteSql.setInt(1, idCheval);
 
@@ -137,16 +154,19 @@ public static Cheval getLeCheval(Connection cnx, int idCheval) {
                 chevalcourse.setCourse(course);
                 chevalcourse.setPosition(resultatRequete.getInt("cc_resultat"));
 
-
                 lesChevauxCourses.add(chevalcourse);
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("La requête de getLesCoursesByCheval a généré une exception SQL");
+        } finally {
+            try { if (resultatRequete != null) resultatRequete.close(); } catch (SQLException e) {}
+            try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
         }
-    return lesChevauxCourses;
+        return lesChevauxCourses;
     }
+
     /**
      * Ajoute un nouveau cheval dans la base de données
      * @param cnx La connexion active à la base de données
@@ -154,38 +174,41 @@ public static Cheval getLeCheval(Connection cnx, int idCheval) {
      * @return boolean true si l'ajout a réussi, false sinon
      */
     public static boolean ajouterCheval(Connection cnx, Cheval cheval) {
-    try {
-        requeteSql = cnx.prepareStatement(
-            "INSERT INTO cheval (nom, dateNaissance, race_id) VALUES (?, ?, ?)",
-            PreparedStatement.RETURN_GENERATED_KEYS
-        );
-        requeteSql.setString(1, cheval.getNom());
+        PreparedStatement requeteSql = null;
+        try {
+            requeteSql = cnx.prepareStatement(
+                    "INSERT INTO cheval (nom, dateNaissance, race_id) VALUES (?, ?, ?)",
+                    PreparedStatement.RETURN_GENERATED_KEYS
+            );
+            requeteSql.setString(1, cheval.getNom());
 
-        // Gestion de la date de naissance
-        if (cheval.getDateNaissance() != null) {
-            requeteSql.setDate(2, java.sql.Date.valueOf(cheval.getDateNaissance()));
-        } else {
-            requeteSql.setNull(2, java.sql.Types.DATE);
-        }
-
-        requeteSql.setInt(3, cheval.getRace().getId());
-
-        int result = requeteSql.executeUpdate();
-
-        if (result == 1) {
-            // Récupération de l'id auto-généré
-            ResultSet rs = requeteSql.getGeneratedKeys();
-            if (rs.next()) {
-                cheval.setId(rs.getInt(1));
+            // Gestion de la date de naissance
+            if (cheval.getDateNaissance() != null) {
+                requeteSql.setDate(2, java.sql.Date.valueOf(cheval.getDateNaissance()));
+            } else {
+                requeteSql.setNull(2, java.sql.Types.DATE);
             }
-            return true;
-        }
-        return false;
 
-    } catch (SQLException e) {
-        e.printStackTrace();
-        System.out.println("Erreur lors de l'ajout du cheval");
-        return false;
+            requeteSql.setInt(3, cheval.getRace().getId());
+
+            int result = requeteSql.executeUpdate();
+
+            if (result == 1) {
+                // Récupération de l'id auto-généré
+                ResultSet rs = requeteSql.getGeneratedKeys();
+                if (rs.next()) {
+                    cheval.setId(rs.getInt(1));
+                }
+                return true;
+            }
+            return false;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de l'ajout du cheval");
+            return false;
+        } finally {
+            try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
+        }
     }
-}
 }
