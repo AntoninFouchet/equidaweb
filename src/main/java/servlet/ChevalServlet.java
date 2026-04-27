@@ -81,6 +81,7 @@ public class ChevalServlet extends HttpServlet {
             try {
                 // Récupération des données du formulaire
                 String nom = request.getParameter("nom");
+                String sire = request.getParameter("sire");
                 String dateNaissanceStr = request.getParameter("dateNaissance");
                 int raceId = Integer.parseInt(request.getParameter("race"));
 
