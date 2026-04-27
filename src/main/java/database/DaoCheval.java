@@ -132,7 +132,7 @@ public class DaoCheval {
 
         try {
             requeteSql = cnx.prepareStatement(
-                    "SELECT co.id as co_id, co.nom as co_nom, co.lieu as co_lieu, co.dateCourse as co_date, " +
+                    "SELECT co.id as co_id, co.nom as co_nom, co.lieu as co_lieu, co.date as co_date, " +
                             "cc.resultat as cc_resultat " +
                             "FROM course co " +
                             "JOIN cheval_course cc ON co.id = cc.course_id " +
