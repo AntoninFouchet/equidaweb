@@ -177,8 +177,7 @@ public class DaoCheval {
         PreparedStatement requeteSql = null;
         try {
             requeteSql = cnx.prepareStatement(
-                    "INSERT INTO cheval (nom, dateNaissance, race_id) VALUES (?, ?, ?)",
-                    PreparedStatement.RETURN_GENERATED_KEYS
+                    "INSERT INTO cheval (nom, dateNaissance, race_id, sire) VALUES (?, ?, ?, ?)",                    PreparedStatement.RETURN_GENERATED_KEYS
             );
             requeteSql.setString(1, cheval.getNom());
 
@@ -190,6 +189,8 @@ public class DaoCheval {
             }
 
             requeteSql.setInt(3, cheval.getRace().getId());
+
+            requeteSql.setString(4, cheval.getSire());
 
             int result = requeteSql.executeUpdate();
 
@@ -205,7 +206,7 @@ public class DaoCheval {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de l'ajout du cheval");
+            System.out.println("Erreur lors de l'ajout du cheval"+ e.getMessage());
             return false;
         } finally {
             try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}

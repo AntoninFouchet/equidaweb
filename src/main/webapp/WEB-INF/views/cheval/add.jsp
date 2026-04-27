@@ -54,6 +54,14 @@
                                 </div>
                             </div>
 
+                            <!-- Sire -->
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right">N° SIRE</label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="sire" class="form-control" placeholder="Ex: 0808.000.020Z">
+                                </div>
+                            </div>
+
                             <!-- Date de naissance -->
                             <div class="form-group">
                                 <label for="dateNaissance" class="col-sm-3 control-label">Date de naissance</label>
