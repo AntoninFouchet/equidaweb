@@ -9,8 +9,6 @@ import model.Vente;
 import model.Lieu;
 
 public class DaoVente {
-    static PreparedStatement requeteSql = null;
-    static ResultSet resultatRequete = null;
 
     /**
      * Récupère toutes les ventes présentes dans la base de données avec leurs lieux associés
@@ -19,6 +17,9 @@ public class DaoVente {
      */
     public static ArrayList<Vente> getLesVentes(Connection cnx) {
         ArrayList<Vente> lesVentes = new ArrayList<Vente>();
+        PreparedStatement requeteSql = null;
+        ResultSet resultatRequete = null;
+
         try {
             requeteSql = cnx.prepareStatement(
                     "SELECT v.id as v_id, v.nom as v_nom, v.dateDebutVente as v_dateDebutVente, " +
@@ -49,13 +50,22 @@ public class DaoVente {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("La requête de getLesVentes a généré une exception SQL");
+            System.out.println("La requête de getLesVentes a généré une exception SQL : " + e.getMessage());
+        } finally {
+            try { if (resultatRequete != null) resultatRequete.close(); } catch (SQLException e) {}
+            try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
         }
         return lesVentes;
     }
 
+    /**
+     * Récupère une vente par son id
+     */
     public static Vente getLaVente(Connection cnx, int idVente) {
         Vente v = null;
+        PreparedStatement requeteSql = null;
+        ResultSet resultatRequete = null;
+
         try {
             requeteSql = cnx.prepareStatement(
                     "SELECT v.id as v_id, v.nom as v_nom, v.dateDebutVente as v_dateDebutVente, " +
@@ -88,7 +98,10 @@ public class DaoVente {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("La requête de getLaVente a généré une exception SQL");
+            System.out.println("La requête de getLaVente a généré une exception SQL : " + e.getMessage());
+        } finally {
+            try { if (resultatRequete != null) resultatRequete.close(); } catch (SQLException e) {}
+            try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
         }
         return v;
     }
@@ -100,12 +113,14 @@ public class DaoVente {
      * @return boolean true si l'ajout a réussi, false sinon
      */
     public static boolean ajouterVente(Connection cnx, Vente vente) {
+        PreparedStatement requeteSql = null;
         try {
             requeteSql = cnx.prepareStatement(
                     "INSERT INTO vente (nom, dateDebutVente, lieu_id) VALUES (?, ?, ?)",
                     PreparedStatement.RETURN_GENERATED_KEYS
             );
             requeteSql.setString(1, vente.getNom());
+
             if (vente.getDateDebutVente() != null) {
                 requeteSql.setDate(2, java.sql.Date.valueOf(vente.getDateDebutVente()));
             } else {
@@ -128,8 +143,10 @@ public class DaoVente {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de l'ajout de la vente");
+            System.out.println("Erreur SQL lors de l'ajout de la vente : " + e.getMessage());
             return false;
+        } finally {
+            try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
         }
     }
 }
