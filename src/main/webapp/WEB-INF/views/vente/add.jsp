@@ -63,9 +63,23 @@
                     </div>
 
                     <div class="form-group">
-                        <div class="col-sm-offset-3 col-sm-9">
-                            <button type="submit" class="btn btn-primary">Ajouter</button>
-                            <a href="<%= request.getContextPath() %>/vente-servlet/list" class="btn btn-default">Annuler</a>
+                        <label class="col-sm-3 control-label">Catégorie *</label>
+                        <div class="col-sm-9">
+                            <select name="categVente" class="form-control" required>
+                                <option value="">Sélectionnez une catégorie</option>
+                                <%
+                                    ArrayList<model.CategVente> lesCategs = (ArrayList<model.CategVente>)request.getAttribute("pLesCategVentes");
+                                    if (lesCategs != null) {
+                                        for(model.CategVente c : lesCategs) {
+                                %>
+                                <option value="<%= c.getCode() %>">
+                                    <%= c.getLibelle() %>
+                                </option>
+                                <%
+                                        }
+                                    }
+                                %>
+                            </select>
                         </div>
                     </div>
 
