@@ -116,8 +116,7 @@ public class DaoVente {
         PreparedStatement requeteSql = null;
         try {
             requeteSql = cnx.prepareStatement(
-                    "INSERT INTO vente (nom, dateDebutVente, lieu_id) VALUES (?, ?, ?)",
-                    PreparedStatement.RETURN_GENERATED_KEYS
+                    "INSERT INTO vente (nom, dateDebutVente, lieu_id, categvente_code) VALUES (?, ?, ?, ?)",                    PreparedStatement.RETURN_GENERATED_KEYS
             );
             requeteSql.setString(1, vente.getNom());
 
@@ -128,6 +127,8 @@ public class DaoVente {
             }
 
             requeteSql.setInt(3, vente.getLieu().getId());
+
+            requeteSql.setString(4, vente.getCategVente().getCode());
 
             int result = requeteSql.executeUpdate();
 
