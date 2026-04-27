@@ -16,33 +16,33 @@ import java.time.LocalDate;
  * @author sio2
  */
 public class TestVente {
-    
+
     public static void main (String args[]){
         CategVente c = new CategVente();
-        c.setCode(1);
+        c.setCode("PRIV");
         c.setLibelle("TestCategVente");
-    
+
         Lieu l = new Lieu();
         l.setId(1);
         l.setVille("Caen");
         l.setNbBoxes(2);
         l.setCommentaires("TestComment");
-        
+
         Lot lo = new Lot();
         lo.setId(4);
         lo.setPrixDepart(2000);
-        
+
         Vente v1 = new Vente();
         v1.setId(2);
         v1.setNom("testVente");
         v1.setDateDebutVente(LocalDate.parse("2024-06-18"));
-      
+
         v1.addLot(lo);
-        
+
         System.out.println("Lieux : " + l.getId() + " " + l.getVille() +  " " + l.getNbBoxes() + " " + l.getCommentaires() +", "
-                +"CategVente : " + c.getCode() + " " + c.getLibelle() + ", " 
-                        + "Vente : " + v1.getId() + " " + v1.getNom() + " "+ v1.getDateDebutVente());
-        
+                +"CategVente : " + c.getCode() + " " + c.getLibelle() + ", "
+                + "Vente : " + v1.getId() + " " + v1.getNom() + " "+ v1.getDateDebutVente());
+
         System.out.println("Liste des lots : ");
         for (Lot lot : v1.getLesLots()){
             System.out.println("Lot numéro : " + lot.getId() + " " + lot.getPrixDepart());

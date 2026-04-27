@@ -10,10 +10,12 @@ import java.util.logging.Logger;
 import database.DaoVente;
 import database.DaoLieu;
 import database.DaoLot;
+import database.DaoCategVente;
 import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
+import model.CategVente;
 import model.Vente;
 import model.Lieu;
 import java.time.LocalDate;
@@ -67,6 +69,10 @@ public class VenteServlet extends HttpServlet {
         if ("/add".equals(path)) {
             ArrayList<Lieu> lesLieux = DaoLieu.getLesLieux(cnx);
             request.setAttribute("pLesLieux", lesLieux);
+
+            ArrayList<CategVente> lesCategs = DaoCategVente.getLesCategVentes(cnx);
+            request.setAttribute("pLesCategVentes", lesCategs);
+
             this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/add.jsp").forward(request, response);
         }
 
@@ -83,14 +89,17 @@ public class VenteServlet extends HttpServlet {
                 String nom = request.getParameter("nom");
                 String dateDebutVenteStr = request.getParameter("dateDebutVente");
                 int lieuId = Integer.parseInt(request.getParameter("lieu"));
+                String codeCateg = request.getParameter("categVente");
 
                 // Création d'un nouveau vente
                 Vente nouvelleVente = new Vente();
                 nouvelleVente.setNom(nom);
 
-                // Gestion de la date de debut de vente
-                // Gestion de la date de debut de vente (en String)
+                CategVente categ = new CategVente();
+                categ.setCode(codeCateg);
+                nouvelleVente.setCategVente(categ);
 
+                // Gestion de la date de debut de vente
                 if (dateDebutVenteStr != null && !dateDebutVenteStr.isEmpty()) {
                     nouvelleVente.setDateDebutVente(LocalDate.parse(dateDebutVenteStr));
                 }

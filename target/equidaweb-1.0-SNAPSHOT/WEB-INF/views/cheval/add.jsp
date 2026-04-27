@@ -62,6 +62,16 @@
                                 </div>
                             </div>
 
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label text-right">Sexe *</label>
+                                <div class="col-sm-9">
+                                    <select name="sexe" class="form-control" required>
+                                        <option value="M">Mâle (M)</option>
+                                        <option value="F">Femelle (F)</option>
+                                    </select>
+                                </div>
+                            </div>
+
                             <!-- Date de naissance -->
                             <div class="form-group">
                                 <label for="dateNaissance" class="col-sm-3 control-label">Date de naissance</label>
