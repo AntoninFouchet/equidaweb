@@ -190,6 +190,8 @@ public class DaoCheval {
 
             requeteSql.setInt(3, cheval.getRace().getId());
 
+            requeteSql.setString(4, cheval.getSire());
+
             int result = requeteSql.executeUpdate();
 
             if (result == 1) {
@@ -204,7 +206,7 @@ public class DaoCheval {
 
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Erreur lors de l'ajout du cheval");
+            System.out.println("Erreur lors de l'ajout du cheval"+ e.getMessage());
             return false;
         } finally {
             try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}

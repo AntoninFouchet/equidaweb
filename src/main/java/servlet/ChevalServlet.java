@@ -88,6 +88,7 @@ public class ChevalServlet extends HttpServlet {
                 // Création d'un nouveau cheval
                 Cheval nouveauCheval = new Cheval();
                 nouveauCheval.setNom(nom);
+                nouveauCheval.setSire(sire);
 
                 // Gestion de la date de naissance
                 if (dateNaissanceStr != null && !dateNaissanceStr.isEmpty()) {
