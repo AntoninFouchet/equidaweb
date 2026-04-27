@@ -177,8 +177,7 @@ public class DaoCheval {
         PreparedStatement requeteSql = null;
         try {
             requeteSql = cnx.prepareStatement(
-                    "INSERT INTO cheval (nom, dateNaissance, race_id) VALUES (?, ?, ?)",
-                    PreparedStatement.RETURN_GENERATED_KEYS
+                    "INSERT INTO cheval (nom, dateNaissance, race_id, sire) VALUES (?, ?, ?, ?)",                    PreparedStatement.RETURN_GENERATED_KEYS
             );
             requeteSql.setString(1, cheval.getNom());
 
