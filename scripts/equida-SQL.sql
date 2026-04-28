@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : 127.0.0.1:3307
--- Généré le : mer. 08 avr. 2026 à 08:37
+-- Généré le : mar. 28 avr. 2026 à 12:39
 -- Version du serveur : 11.3.2-MariaDB
 -- Version de PHP : 8.2.18
 
@@ -43,7 +43,13 @@ INSERT INTO `acheteur` (`client_id`, `formation`) VALUES
 (2, 'Collectionneur confirmé'),
 (3, 'Enchères débutant'),
 (4, 'Expert en art'),
-(5, 'Collectionneur confirmé');
+(5, 'Collectionneur confirmé'),
+(103, 'Expertise en Pur-sang'),
+(104, 'Enchères en ligne'),
+(105, 'Acheteur international'),
+(202, 'Amateur passionné'),
+(203, 'Investisseur international'),
+(204, 'Spécialiste Pur-sang');
 
 -- --------------------------------------------------------
 
@@ -90,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `cheval` (
   KEY `idx_cheval_mere` (`mere_id`),
   KEY `idx_cheval_race` (`race_id`),
   KEY `idx_cheval_vendeur` (`vendeur_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `cheval`
@@ -102,7 +108,26 @@ INSERT INTO `cheval` (`id`, `nom`, `sexe`, `sire`, `pere_id`, `mere_id`, `dateNa
 (7, 'Tonnerre', 'M', '7777.888.999C', 5, 6, '2021-05-10', 1, 3),
 (8, 'Luna', 'F', '0000.111.222D', 5, 6, '2022-07-03', 3, 4),
 (9, 'Bella', 'F', '3333.444.555E', NULL, NULL, '2018-03-12', 4, 5),
-(10, 'test', 'M', NULL, NULL, NULL, '2022-06-30', 2, NULL);
+(100, 'Ouragan', 'M', '1000.200.300A', NULL, NULL, '2018-05-12', 1, 100),
+(101, 'Tempête', 'F', '2000.300.400B', NULL, NULL, '2019-04-20', 2, 101),
+(102, 'Foudre', 'G', '3000.400.500C', NULL, NULL, '2017-08-11', 1, 100),
+(103, 'Diamant', 'M', '4000.500.600D', 100, 101, '2022-03-01', 1, 101),
+(104, 'Saphir', 'M', '5000.600.700E', NULL, NULL, '2020-02-14', 3, 100),
+(105, 'Rubis', 'F', '6000.700.800F', 104, NULL, '2023-01-10', 3, 101),
+(106, 'Tornade', 'F', '7000.800.900G', NULL, NULL, '2021-06-30', 2, 100),
+(107, 'Pégase', 'M', '8000.900.000H', 100, 106, '2024-01-05', 1, 101),
+(108, 'Etoile', 'F', '9000.000.100I', NULL, NULL, '2019-11-22', 4, 100),
+(109, 'Champion', 'M', '1111.999.888J', NULL, 108, '2022-05-18', 4, 101),
+(200, 'Vulcain', 'M', '2222.111.000A', NULL, NULL, '2019-02-15', 1, 200),
+(201, 'Athena', 'F', '2222.111.001B', NULL, NULL, '2020-03-22', 2, 201),
+(202, 'Apollon', 'M', '2222.111.002C', 200, 201, '2023-04-10', 1, 200),
+(203, 'Hera', 'F', '2222.111.003D', NULL, NULL, '2018-09-05', 3, 201),
+(204, 'Zeus', 'M', '2222.111.004E', NULL, 203, '2022-07-14', 3, 200),
+(205, 'Hermes', 'G', '2222.111.005F', NULL, NULL, '2017-11-30', 1, 201),
+(206, 'Iris', 'F', '2222.111.006G', 200, NULL, '2021-01-25', 4, 200),
+(207, 'Orion', 'M', '2222.111.007H', NULL, NULL, '2020-08-19', 4, 201),
+(208, 'Venus', 'F', '2222.111.008I', 207, 206, '2024-02-10', 4, 200),
+(209, 'Titan', 'M', '2222.111.009J', 200, 201, '2024-03-01', 1, 201);
 
 -- --------------------------------------------------------
 
@@ -132,7 +157,20 @@ INSERT INTO `cheval_course` (`cheval_id`, `course_id`, `resultat`) VALUES
 (7, 3, '2'),
 (8, 2, '3'),
 (8, 4, '1'),
-(9, 2, '1');
+(9, 2, '1'),
+(100, 100, '5'),
+(100, 101, '2'),
+(101, 104, '1'),
+(102, 102, '3'),
+(104, 103, '1'),
+(106, 105, '4'),
+(200, 200, '1'),
+(200, 201, '3'),
+(201, 202, '2'),
+(203, 203, '5'),
+(205, 200, '2'),
+(205, 204, '4'),
+(207, 201, '1');
 
 -- --------------------------------------------------------
 
@@ -153,7 +191,7 @@ CREATE TABLE IF NOT EXISTS `client` (
   `pays_code` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `idx_client_pays` (`pays_code`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `client`
@@ -164,7 +202,18 @@ INSERT INTO `client` (`id`, `titre`, `nom`, `prenom`, `rue`, `copos`, `ville`, `
 (2, 'Mme', 'Martin', 'Sophie', '5 avenue de la République', '69002', 'Lyon', 'sophie.martin@example.com', 'FR'),
 (3, 'M.', 'Durand', 'Pierre', '20 boulevard Saint-Michel', '31000', 'Toulouse', 'pierre.durand@example.com', 'FR'),
 (4, 'Mme', 'Bernard', 'Claire', '8 rue Victor Hugo', '13001', 'Marseille', 'claire.bernard@example.com', 'FR'),
-(5, 'M.', 'Petit', 'Louis', '15 rue de la Paix', '67000', 'Strasbourg', 'louis.petit@example.com', 'FR');
+(5, 'M.', 'Petit', 'Louis', '15 rue de la Paix', '67000', 'Strasbourg', 'louis.petit@example.com', 'FR'),
+(100, 'M.', 'Lefebvre', 'Antoine', '12 rue du Haras', '60500', 'Chantilly', 'antoine.l@email.fr', 'FR'),
+(101, 'Mme', 'Roux', 'Emilie', '4 avenue des Chevaux', '14800', 'Deauville', 'eroux@email.fr', 'FR'),
+(102, 'M.', 'Moreau', 'Lucas', '7 chemin vert', '77300', 'Fontainebleau', 'lucas.moreau@email.fr', 'FR'),
+(103, 'Mme', 'Dubois', 'Alice', '89 rue royale', '75008', 'Paris', 'alice.d@email.fr', 'FR'),
+(104, 'M.', 'Garnier', 'Paul', '1 place de la gare', '69001', 'Lyon', 'paul.g@email.fr', 'FR'),
+(105, 'M.', 'Peeters', 'Marc', '10 avenue Louise', '1000', 'Bruxelles', 'marc.p@email.be', 'BE'),
+(200, 'M.', 'Boucher', 'Hugo', '55 route des haras', '50000', 'Saint-Lô', 'hugo.boucher@email.fr', 'FR'),
+(201, 'Mme', 'Simon', 'Chloé', '12 place du marché', '49400', 'Saumur', 'csimon@email.fr', 'FR'),
+(202, 'M.', 'Michel', 'Thomas', '9 rue de la paix', '65000', 'Tarbes', 'thomas.m@email.fr', 'FR'),
+(203, 'Mme', 'Garcia', 'Inès', 'Calle Mayor 12', '28001', 'Madrid', 'ines.g@email.es', 'ES'),
+(204, 'M.', 'Rossi', 'Marco', 'Via Roma 45', '00100', 'Rome', 'marco.rossi@email.it', 'IT');
 
 -- --------------------------------------------------------
 
@@ -206,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `course` (
   `lieu` varchar(255) DEFAULT NULL,
   `date` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `course`
@@ -216,7 +265,18 @@ INSERT INTO `course` (`id`, `nom`, `lieu`, `date`) VALUES
 (1, 'Grand Prix de Paris', 'Paris', '2023-06-15'),
 (2, 'Coupe de Normandie', 'Deauville', '2023-07-20'),
 (3, 'Trophée du Midi', 'Toulouse', '2023-09-05'),
-(4, 'Challenge National', 'Lyon', '2023-10-10');
+(4, 'Challenge National', 'Lyon', '2023-10-10'),
+(100, 'Prix de l\'Arc de Triomphe', 'ParisLongchamp', '2023-10-01'),
+(101, 'Prix de Diane', 'Chantilly', '2023-06-18'),
+(102, 'Grand Steeple-Chase', 'Auteuil', '2023-05-21'),
+(103, 'Critérium des 3 ans', 'Vincennes', '2023-12-10'),
+(104, 'Derby de l\'Ouest', 'Nantes', '2023-07-14'),
+(105, 'Prix du Haras', 'Deauville', '2024-08-15'),
+(200, 'Prix d\'Amérique', 'Paris-Vincennes', '2024-01-28'),
+(201, 'Grand Prix de Saint-Cloud', 'Saint-Cloud', '2024-06-30'),
+(202, 'Poule d\'Essai des Poulains', 'ParisLongchamp', '2024-05-12'),
+(203, 'Prix Jacques Le Marois', 'Deauville', '2024-08-11'),
+(204, 'Prix Morny', 'Deauville', '2024-08-18');
 
 -- --------------------------------------------------------
 
@@ -260,7 +320,7 @@ CREATE TABLE IF NOT EXISTS `lieu` (
   `nbBoxes` int(11) DEFAULT 0,
   `commentaires` text DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `lieu`
@@ -270,7 +330,17 @@ INSERT INTO `lieu` (`id`, `ville`, `nbBoxes`, `commentaires`) VALUES
 (1, 'Paris', 120, 'Grand centre équestre'),
 (2, 'Lyon', 80, 'Infrastructure moderne'),
 (3, 'Bordeaux', 60, 'Cadre agréable proche du centre'),
-(4, 'Toulouse', 100, 'Parc équestre en périphérie');
+(4, 'Toulouse', 100, 'Parc équestre en périphérie'),
+(100, 'Chantilly', 250, 'Capitale du cheval, grand hippodrome'),
+(101, 'Deauville', 150, 'Proche mer, idéal ventes de yearlings'),
+(102, 'Fontainebleau', 100, 'Cadre forestier, grand espace d\'entraînement'),
+(103, 'Pau', 80, 'Spécialisé dans les courses d\'obstacles'),
+(104, 'Maisons-Laffitte', 200, 'Cité du cheval, grand centre d\'entraînement'),
+(200, 'Saint-Lô', 180, 'Pôle hippique prestigieux, Normandie'),
+(201, 'Saumur', 120, 'Cadre Noir, grande tradition équestre'),
+(202, 'Tarbes', 90, 'Spécialisé dans les races anglo-arabes'),
+(203, 'Pompadour', 140, 'Haras national, magnifique domaine'),
+(204, 'Le Pin-au-Haras', 220, 'Le \"Versailles du cheval\"');
 
 -- --------------------------------------------------------
 
@@ -287,7 +357,7 @@ CREATE TABLE IF NOT EXISTS `lot` (
   PRIMARY KEY (`id`),
   KEY `idx_lot_vente` (`vente_id`),
   KEY `fk_lot_cheval` (`cheval_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=210 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `lot`
@@ -298,7 +368,27 @@ INSERT INTO `lot` (`id`, `prixDepart`, `vente_id`, `cheval_id`) VALUES
 (12, 3500.00, 5, 6),
 (13, 7000.00, 6, 7),
 (14, 4500.00, 7, 8),
-(15, 6000.00, 8, 9);
+(15, 6000.00, 8, 9),
+(100, 15000.00, 100, 103),
+(101, 8000.00, 100, 105),
+(102, 25000.00, 102, 107),
+(103, 12000.00, 101, 100),
+(104, 9500.00, 101, 101),
+(105, 5000.00, 104, 102),
+(106, 18000.00, 103, 104),
+(107, 7000.00, 103, 106),
+(108, 3000.00, 104, 108),
+(109, 4500.00, 104, 109),
+(200, 18500.00, 200, 200),
+(201, 22000.00, 200, 201),
+(202, 12000.00, 201, 202),
+(203, 9000.00, 203, 203),
+(204, 15000.00, 203, 204),
+(205, 7500.00, 202, 205),
+(206, 4000.00, 204, 206),
+(207, 5500.00, 204, 207),
+(208, 3500.00, 204, 208),
+(209, 28000.00, 201, 209);
 
 -- --------------------------------------------------------
 
@@ -398,7 +488,12 @@ INSERT INTO `vendeur` (`client_id`, `ca`) VALUES
 (2, 8500.75),
 (3, 15700.00),
 (4, 6400.25),
-(5, 23000.00);
+(5, 23000.00),
+(100, 45000.00),
+(101, 125000.00),
+(102, 0.00),
+(200, 89000.00),
+(201, 215000.00);
 
 -- --------------------------------------------------------
 
@@ -416,7 +511,7 @@ CREATE TABLE IF NOT EXISTS `vente` (
   PRIMARY KEY (`id`),
   KEY `idx_vente_categ` (`categvente_code`),
   KEY `idx_vente_lieu` (`lieu_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=205 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 --
 -- Déchargement des données de la table `vente`
@@ -426,7 +521,17 @@ INSERT INTO `vente` (`id`, `nom`, `dateDebutVente`, `categvente_code`, `lieu_id`
 (5, 'Grande Vente Printemps', '2025-03-15', 'ENCH', 1),
 (6, 'Vente Prestige', '2025-06-10', 'PRIV', 2),
 (7, 'Enchères d’Été', '2025-07-05', 'ENCH', 3),
-(8, 'Vente en Ligne Automne', '2025-09-20', 'ONLI', 4);
+(8, 'Vente en Ligne Automne', '2025-09-20', 'ONLI', 4),
+(100, 'Vente des Yearlings de Deauville', '2024-08-20', 'ENCH', 101),
+(101, 'Grande Vente d\'Hiver', '2023-12-15', 'COUR', 100),
+(102, 'Vente Privée Elite', '2026-05-10', 'PRIV', 102),
+(103, 'Enchères Flash en Ligne', '2026-06-01', 'ONLI', 104),
+(104, 'Vente d\'Automne', '2025-10-15', 'COUR', 103),
+(200, 'Vente de Printemps de Saumur', '2025-04-10', 'ENCH', 201),
+(201, 'Sélection Elite Pompadour', '2025-07-22', 'PRIV', 203),
+(202, 'Enchères Numériques Internationales', '2025-11-05', 'ONLI', 200),
+(203, 'Vente Mixte d\'Automne', '2025-10-30', 'COUR', 204),
+(204, 'Vente de Yearlings Anglo-Arabes', '2025-09-12', 'ENCH', 202);
 
 --
 -- Contraintes pour les tables déchargées
