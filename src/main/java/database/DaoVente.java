@@ -68,7 +68,7 @@ public class DaoVente {
 
         try {
             requeteSql = cnx.prepareStatement(
-                    "SELECT v.id as v_id, v.nom as v_nom, v.dateDebutVente as v_dateDebutVente, " +
+                    "SELECT v.id as v_id, v.nom as v_nom, v.dateDebutVente as v_dateDebutVente, v.categvente_code, " +
                             "l.id as l_id, l.ville as l_ville, l.nbBoxes as l_nbBoxes, l.commentaires as l_commentaires " +
                             "FROM vente v " +
                             "INNER JOIN lieu l ON v.lieu_id = l.id " +
@@ -86,6 +86,14 @@ public class DaoVente {
                 java.sql.Date dateSQL = resultatRequete.getDate("v_dateDebutVente");
                 if (dateSQL != null) {
                     v.setDateDebutVente(dateSQL.toLocalDate());
+                }
+
+                // Récupération de la catégorie
+                String codeCateg = resultatRequete.getString("categvente_code");
+                if (codeCateg != null) {
+                    model.CategVente cv = new model.CategVente();
+                    cv.setCode(codeCateg);
+                    v.setCategVente(cv);
                 }
 
                 Lieu l = new Lieu();
@@ -145,6 +153,37 @@ public class DaoVente {
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Erreur SQL lors de l'ajout de la vente : " + e.getMessage());
+            return false;
+        } finally {
+            try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
+        }
+    }
+
+
+    public static boolean modifierVente(Connection cnx, Vente vente) {
+        PreparedStatement requeteSql = null;
+        try {
+            requeteSql = cnx.prepareStatement(
+                    "UPDATE vente SET nom = ?, dateDebutVente = ?, lieu_id = ?, categvente_code = ? WHERE id = ?"
+            );
+            requeteSql.setString(1, vente.getNom());
+
+            if (vente.getDateDebutVente() != null) {
+                requeteSql.setDate(2, java.sql.Date.valueOf(vente.getDateDebutVente()));
+            } else {
+                requeteSql.setNull(2, java.sql.Types.DATE);
+            }
+
+            requeteSql.setInt(3, vente.getLieu().getId());
+            requeteSql.setString(4, vente.getCategVente().getCode());
+            requeteSql.setInt(5, vente.getId()); // L'ID pour la clause WHERE
+
+            int result = requeteSql.executeUpdate();
+            return (result == 1);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur SQL lors de la modification de la vente : " + e.getMessage());
             return false;
         } finally {
             try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
