@@ -215,4 +215,44 @@ public class DaoCheval {
             try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
         }
     }
+
+    /**
+     * Modifie un cheval existant dans la base de données
+     * @param cnx La connexion active à la base de données
+     * @param cheval Le cheval avec ses nouvelles données (doit avoir un ID)
+     * @return boolean true si la modification a réussi, false sinon
+     */
+    public static boolean modifierCheval(Connection cnx, Cheval cheval) {
+        PreparedStatement requeteSql = null;
+        try {
+            requeteSql = cnx.prepareStatement(
+                    "UPDATE cheval SET nom = ?, dateNaissance = ?, race_id = ?, sire = ?, sexe = ? WHERE id = ?"
+            );
+            requeteSql.setString(1, cheval.getNom());
+
+            // Gestion de la date de naissance
+            if (cheval.getDateNaissance() != null) {
+                requeteSql.setDate(2, java.sql.Date.valueOf(cheval.getDateNaissance()));
+            } else {
+                requeteSql.setNull(2, java.sql.Types.DATE);
+            }
+
+            requeteSql.setInt(3, cheval.getRace().getId());
+            requeteSql.setString(4, cheval.getSire());
+            requeteSql.setString(5, cheval.getSexe());
+
+            // L'ID du cheval à modifier
+            requeteSql.setInt(6, cheval.getId());
+
+            int result = requeteSql.executeUpdate();
+            return (result == 1); // Retourne vrai si 1 ligne a bien été modifiée
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Erreur lors de la modification du cheval : " + e.getMessage());
+            return false;
+        } finally {
+            try { if (requeteSql != null) requeteSql.close(); } catch (SQLException e) {}
+        }
+    }
 }
