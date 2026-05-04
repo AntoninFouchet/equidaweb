@@ -25,7 +25,7 @@ import model.Lot;
 public class VenteServlet extends HttpServlet {
 
     Connection cnx;
-    
+
     @Override
     public void init() {
         ServletContext servletContext = getServletContext();
@@ -36,7 +36,7 @@ public class VenteServlet extends HttpServlet {
             Logger.getLogger(VenteServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         String path = request.getPathInfo();
         System.out.println("PathInfo: " + path);
@@ -46,6 +46,7 @@ public class VenteServlet extends HttpServlet {
             request.setAttribute("pLesVentes", lesVentes);
             this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/list.jsp").forward(request, response);
         }
+
         if ("/show".equals(path)) {
             try {
                 int idVente = Integer.parseInt(request.getParameter("idVente"));
@@ -57,26 +58,36 @@ public class VenteServlet extends HttpServlet {
                     request.setAttribute("pLaVente", laVente);
                     this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/show.jsp").forward(request, response);
                 } else {
-                    response.sendRedirect(request.getContextPath() + "/vente-servlet/lister");
+                    response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
                 }
             } catch (NumberFormatException e) {
-                System.out.println("Erreur : l'id du vente n'est pas un nombre valide");
-                response.sendRedirect(request.getContextPath() + "/vente-servlet/lister");
+                response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
             }
-
         }
 
         if ("/add".equals(path)) {
-            ArrayList<Lieu> lesLieux = DaoLieu.getLesLieux(cnx);
-            request.setAttribute("pLesLieux", lesLieux);
-
-            ArrayList<CategVente> lesCategs = DaoCategVente.getLesCategVentes(cnx);
-            request.setAttribute("pLesCategVentes", lesCategs);
-
+            request.setAttribute("pLesLieux", DaoLieu.getLesLieux(cnx));
+            request.setAttribute("pLesCategVentes", DaoCategVente.getLesCategVentes(cnx));
             this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/add.jsp").forward(request, response);
         }
 
+        if ("/update".equals(path)) {
+            try {
+                int idVente = Integer.parseInt(request.getParameter("idVente"));
+                Vente laVente = DaoVente.getLaVente(cnx, idVente);
 
+                if (laVente != null) {
+                    request.setAttribute("pLaVente", laVente);
+                    request.setAttribute("pLesLieux", DaoLieu.getLesLieux(cnx));
+                    request.setAttribute("pLesCategVentes", DaoCategVente.getLesCategVentes(cnx));
+                    this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/update.jsp").forward(request, response);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
+                }
+            } catch (NumberFormatException e) {
+                response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
+            }
+        }
     }
 
     @Override
@@ -85,49 +96,81 @@ public class VenteServlet extends HttpServlet {
 
         if ("/add".equals(path)) {
             try {
-                // Récupération des données du formulaire
                 String nom = request.getParameter("nom");
                 String dateDebutVenteStr = request.getParameter("dateDebutVente");
                 int lieuId = Integer.parseInt(request.getParameter("lieu"));
                 String codeCateg = request.getParameter("categVente");
 
-                // Création d'un nouveau vente
                 Vente nouvelleVente = new Vente();
                 nouvelleVente.setNom(nom);
 
-                CategVente categ = new CategVente();
-                categ.setCode(codeCateg);
-                nouvelleVente.setCategVente(categ);
+                if (codeCateg != null && !codeCateg.isEmpty()) {
+                    CategVente categ = new CategVente();
+                    categ.setCode(codeCateg);
+                    nouvelleVente.setCategVente(categ);
+                }
 
-                // Gestion de la date de debut de vente
                 if (dateDebutVenteStr != null && !dateDebutVenteStr.isEmpty()) {
                     nouvelleVente.setDateDebutVente(LocalDate.parse(dateDebutVenteStr));
                 }
 
-                // Récupération et attribution du lieu
                 Lieu lieu = DaoLieu.getLieuById(cnx, lieuId);
                 if (lieu != null) {
                     nouvelleVente.setLieu(lieu);
                 } else {
-                    throw new Exception("Le lieu sélectionné n'existe pas");
+                    throw new Exception("Lieu invalide");
                 }
 
-                // Tentative d'ajout en base de données
                 if (DaoVente.ajouterVente(cnx, nouvelleVente)) {
-                    // Redirection vers la page de consultation du vente nouvellement créé
                     response.sendRedirect(request.getContextPath() + "/vente-servlet/show?idVente=" + nouvelleVente.getId());
                 } else {
-                    throw new Exception("Erreur lors de l'enregistrement du vente");
+                    throw new Exception("Erreur ajout BDD");
                 }
 
-            } catch (NumberFormatException e) {
-                request.setAttribute("message", "Erreur : le lieu sélectionnée n'est pas valide");
-                request.setAttribute("pLesLieux", DaoLieu.getLesLieux(cnx));
-                this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/add.jsp").forward(request, response);
             } catch (Exception e) {
-                request.setAttribute("message", "Erreur : " + e.getMessage());
-                request.setAttribute("pLesLieux", DaoLieu.getLesLieux(cnx));
-                this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/add.jsp").forward(request, response);
+                System.out.println("Erreur ADD : " + e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
+            }
+        }
+
+        if ("/update".equals(path)) {
+            try {
+                int idVente = Integer.parseInt(request.getParameter("id"));
+                String nom = request.getParameter("nom");
+                String dateDebutVenteStr = request.getParameter("dateDebutVente");
+                int lieuId = Integer.parseInt(request.getParameter("lieu"));
+                String codeCateg = request.getParameter("categVente");
+
+                Vente venteModifiee = new Vente();
+                venteModifiee.setId(idVente);
+                venteModifiee.setNom(nom);
+
+                if (codeCateg != null && !codeCateg.isEmpty()) {
+                    CategVente categ = new CategVente();
+                    categ.setCode(codeCateg);
+                    venteModifiee.setCategVente(categ);
+                }
+
+                if (dateDebutVenteStr != null && !dateDebutVenteStr.isEmpty()) {
+                    venteModifiee.setDateDebutVente(LocalDate.parse(dateDebutVenteStr));
+                }
+
+                Lieu lieu = DaoLieu.getLieuById(cnx, lieuId);
+                if (lieu != null) {
+                    venteModifiee.setLieu(lieu);
+                } else {
+                    throw new Exception("Lieu invalide");
+                }
+
+                if (DaoVente.modifierVente(cnx, venteModifiee)) {
+                    response.sendRedirect(request.getContextPath() + "/vente-servlet/show?idVente=" + idVente);
+                } else {
+                    throw new Exception("Erreur modification BDD");
+                }
+
+            } catch (Exception e) {
+                System.out.println("Erreur UPDATE : " + e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
             }
         }
     }

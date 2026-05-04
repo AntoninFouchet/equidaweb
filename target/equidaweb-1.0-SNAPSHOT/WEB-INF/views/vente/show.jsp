@@ -6,7 +6,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <title>Equida - Détails de la vente</title>
-    <link rel="stylesheet" 
+    <link rel="stylesheet"
           href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
           integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
           crossorigin="anonymous">
@@ -41,75 +41,88 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="form-container">
-                <% 
+                <%
                     Vente laVente = (Vente)request.getAttribute("pLaVente");
                     if(laVente != null) {
                 %>
-                    <h2>Détails de la vente : <%= laVente.getNom() %></h2>
-                    
-                    <div class="row detail-row">
-                        <div class="col-sm-3 detail-label">Identifiant</div>
-                        <div class="col-sm-9 detail-value"><%= laVente.getId() %></div>
-                    </div>
+                <h2>Détails de la vente : <%= laVente.getNom() %></h2>
+                <hr>
 
-                    <div class="row detail-row">
-                        <div class="col-sm-3 detail-label">Nom</div>
-                        <div class="col-sm-9 detail-value"><%= laVente.getNom() %></div>
-                    </div>
+                <div class="row detail-row">
+                    <div class="col-sm-3 detail-label">Identifiant</div>
+                    <div class="col-sm-9 detail-value"><%= laVente.getId() %></div>
+                </div>
 
-                    <div class="row detail-row">
-                        <div class="col-sm-3 detail-label">Date de début de vente</div>
-                        <div class="col-sm-9 detail-value">
-                            <%= laVente.getDateDebutVente() != null ? laVente.getDateDebutVente() : "Non renseignée" %>
-                        </div>
-                    </div>
+                <div class="row detail-row">
+                    <div class="col-sm-3 detail-label">Nom</div>
+                    <div class="col-sm-9 detail-value"><%= laVente.getNom() %></div>
+                </div>
 
-                    <div class="row detail-row">
-                        <div class="col-sm-3 detail-label">Lieu</div>
-                        <div class="col-sm-9 detail-value">
-                            <%= laVente.getLieu() != null ? laVente.getLieu().getVille() : "Non renseigné" %>
-                        </div>
+                <div class="row detail-row">
+                    <div class="col-sm-3 detail-label">Date de début de vente</div>
+                    <div class="col-sm-9 detail-value">
+                        <%= laVente.getDateDebutVente() != null ? laVente.getDateDebutVente() : "Non renseignée" %>
                     </div>
-                    <h3>Lots associés</h3>
-                    <%
-                        if(laVente.getLesLots() != null && !laVente.getLesLots().isEmpty()) {
-                    %>
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th>ID Lot</th>
-                                <th>Prix départ</th>
-                                <th>Nom du cheval</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <% for(Lot lot : laVente.getLesLots()) { %>
-                            <tr>
-                                <td><%= lot.getId() %></td>
-                                <td><%= lot.getPrixDepart() %></td>
-                                <td><a href="<%= request.getContextPath() %>/cheval-servlet/show?idCheval=<%= lot.getCheval().getId() %>"><%= lot.getCheval().getNom() %></a></td>
-                            </tr>
-                            <% } %>
-                        </tbody>
-                    </table>
-                    <% } else { %>
-                        <div class="alert alert-info">Aucun lot associé à cette vente.</div>
+                </div>
+
+                <div class="row detail-row">
+                    <div class="col-sm-3 detail-label">Lieu</div>
+                    <div class="col-sm-9 detail-value">
+                        <%= laVente.getLieu() != null ? laVente.getLieu().getVille() : "Non renseigné" %>
+                    </div>
+                </div>
+
+                <div class="row detail-row">
+                    <div class="col-sm-3 detail-label">Catégorie</div>
+                    <div class="col-sm-9 detail-value">
+                        <%= laVente.getCategVente() != null ? laVente.getCategVente().getLibelle() : "Non renseignée" %>
+                    </div>
+                </div>
+
+                <h3>Lots associés</h3>
+                <%
+                    if(laVente.getLesLots() != null && !laVente.getLesLots().isEmpty()) {
+                %>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>ID Lot</th>
+                        <th>Prix départ</th>
+                        <th>Nom du cheval</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <% for(Lot lot : laVente.getLesLots()) { %>
+                    <tr>
+                        <td><%= lot.getId() %></td>
+                        <td><%= lot.getPrixDepart() %> €</td>
+                        <td><a href="<%= request.getContextPath() %>/cheval-servlet/show?idCheval=<%= lot.getCheval().getId() %>"><%= lot.getCheval().getNom() %></a></td>
+                    </tr>
                     <% } %>
-
-                    <div class="row" style="margin-top: 30px;">
-                        <div class="col-sm-offset-3 col-sm-9">
-                            <a href="<%= request.getContextPath() %>/vente-servlet/list" class="btn btn-default">
-                                <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste
-                            </a>
-                        </div>
-                    </div>
+                    </tbody>
+                </table>
                 <% } else { %>
-                    <div class="alert alert-danger">
-                        La vente demandée n'existe pas.
+                <div class="alert alert-info">Aucun lot associé à cette vente.</div>
+                <% } %>
+
+                <!-- Boutons d'action -->
+                <div class="row" style="margin-top: 30px;">
+                    <div class="col-sm-12">
+                        <a href="<%= request.getContextPath() %>/vente-servlet/list" class="btn btn-default">
+                            <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste
+                        </a>
+                        <a href="<%= request.getContextPath() %>/vente-servlet/update?idVente=<%= laVente.getId() %>" class="btn btn-warning pull-right">
+                            <span class="glyphicon glyphicon-pencil"></span> Modifier cette vente
+                        </a>
                     </div>
-                    <a href="<%= request.getContextPath() %>/vente-servlet/list" class="btn btn-default">
-                        <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste
-                    </a>
+                </div>
+                <% } else { %>
+                <div class="alert alert-danger">
+                    La vente demandée n'existe pas.
+                </div>
+                <a href="<%= request.getContextPath() %>/vente-servlet/list" class="btn btn-default">
+                    <span class="glyphicon glyphicon-arrow-left"></span> Retour à la liste
+                </a>
                 <% } %>
             </div>
         </div>

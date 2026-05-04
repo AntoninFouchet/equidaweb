@@ -66,9 +66,9 @@ public class DaoCheval {
         ResultSet resultatRequete = null;
 
         try {
-            // Requête pour récupérer le cheval avec sa race et ses parents
             requeteSql = cnx.prepareStatement(
                     "SELECT c.id AS c_id, c.nom AS c_nom, c.dateNaissance AS c_dateNaissance, " +
+                            "c.sire AS c_sire, c.sexe AS c_sexe, " +
                             "r.id AS r_id, r.libelle AS r_libelle, " +
                             "cpere.id AS pere_id, cpere.nom AS pere_nom, " +
                             "cmere.id AS mere_id, cmere.nom AS mere_nom " +
@@ -86,6 +86,10 @@ public class DaoCheval {
                 cheval = new Cheval();
                 cheval.setId(resultatRequete.getInt("c_id"));
                 cheval.setNom(resultatRequete.getString("c_nom"));
+
+                // NOUVEAU : On récupère le sire et le sexe
+                cheval.setSire(resultatRequete.getString("c_sire"));
+                cheval.setSexe(resultatRequete.getString("c_sexe"));
 
                 java.sql.Date dateN = resultatRequete.getDate("c_dateNaissance");
                 if (dateN != null) {
