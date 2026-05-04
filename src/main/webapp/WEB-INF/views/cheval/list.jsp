@@ -53,12 +53,24 @@
             </tr>
             </thead>
             <tbody>
-            <% for (Vente v : lesVentes) { %>
+            <%
+                ArrayList<model.Cheval> lesChevaux = (ArrayList<model.Cheval>)request.getAttribute("pLesChevaux");
+                if (lesChevaux != null) {
+                    for (model.Cheval c : lesChevaux) {
+            %>
             <tr>
-                <td><%= v.getId() %></td>
-                <td><a href="<%= request.getContextPath() %>/vente-servlet/show?idVente=<%= v.getId() %>"><%= v.getNom() %></a></td>
-                <td><%= v.getLieu().getVille() %></td>
+                <td><%= c.getId() %></td>
+                <td><a href="<%= request.getContextPath() %>/cheval-servlet/show?idCheval=<%= c.getId() %>"><%= c.getNom() %></a></td>
+                <td><%= c.getRace() != null ? c.getRace().getNom() : "" %></td>
+                <td>
+                    <a href="<%= request.getContextPath() %>/cheval-servlet/update?idCheval=<%= c.getId() %>" class="btn btn-warning btn-xs">Modifier</a>
+                </td>
             </tr>
+            <%
+                }
+            } else {
+            %>
+            <tr><td colspan="4">Aucun cheval trouvé.</td></tr>
             <% } %>
             </tbody>
         </table>
