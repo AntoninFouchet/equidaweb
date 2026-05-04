@@ -3,13 +3,13 @@
 ## Description du projet
 **EquidaWeb** est une application web développée en Java (Jakarta EE) permettant de gérer intégralement une société de ventes aux enchères de chevaux. L'application facilite la gestion des chevaux, de leur généalogie, de leur palmarès sportif, ainsi que l'organisation physique et digitale des ventes (lots, enchères, lieux, et acheteurs/vendeurs).
 
-##  Fonctionnalités Principales
+## Fonctionnalités Principales
 *   **Gestion des Chevaux :** Ajout, modification, consultation détaillée (généalogie père/mère, SIRE, race, sexe).
 *   **Gestion des Ventes :** Planification des ventes, affectation de catégories (Enchères, Vente Privée, Yearlings, Online) et de lieux.
 *   **Gestion des Lots :** Affectation des chevaux à des lots avec prix de départ.
 *   **Palmarès Sportif :** Historique des participations aux courses pour chaque cheval avec leurs résultats.
 
-## 🛠️ Technologies Utilisées
+## Technologies Utilisées
 *   **Back-end :** Java (Jakarta EE), Servlets
 *   **Front-end :** JSP (JavaServer Pages), HTML5, CSS3, Bootstrap 3.3.7
 *   **Base de données :** MariaDB 
