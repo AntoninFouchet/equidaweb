@@ -76,6 +76,24 @@ public class VenteServlet extends HttpServlet {
             this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/add.jsp").forward(request, response);
         }
 
+        if ("/update".equals(path)) {
+            try {
+                int idVente = Integer.parseInt(request.getParameter("idVente"));
+                Vente laVente = DaoVente.getLaVente(cnx, idVente);
+
+                if (laVente != null) {
+                    request.setAttribute("pLaVente", laVente);
+                    request.setAttribute("pLesLieux", DaoLieu.getLesLieux(cnx));
+                    request.setAttribute("pLesCategVentes", DaoCategVente.getLesCategVentes(cnx));
+                    this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/update.jsp").forward(request, response);
+                } else {
+                    response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
+                }
+            } catch (NumberFormatException e) {
+                response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
+            }
+        }
+
 
     }
 
@@ -128,6 +146,45 @@ public class VenteServlet extends HttpServlet {
                 request.setAttribute("message", "Erreur : " + e.getMessage());
                 request.setAttribute("pLesLieux", DaoLieu.getLesLieux(cnx));
                 this.getServletContext().getRequestDispatcher("/WEB-INF/views/vente/add.jsp").forward(request, response);
+            }
+        }
+
+        if ("/update".equals(path)) {
+            try {
+                int idVente = Integer.parseInt(request.getParameter("id"));
+                String nom = request.getParameter("nom");
+                String dateDebutVenteStr = request.getParameter("dateDebutVente");
+                int lieuId = Integer.parseInt(request.getParameter("lieu"));
+                String codeCateg = request.getParameter("categVente");
+
+                Vente venteModifiee = new Vente();
+                venteModifiee.setId(idVente);
+                venteModifiee.setNom(nom);
+
+                if (dateDebutVenteStr != null && !dateDebutVenteStr.isEmpty()) {
+                    venteModifiee.setDateDebutVente(LocalDate.parse(dateDebutVenteStr));
+                }
+
+                Lieu lieu = DaoLieu.getLieuById(cnx, lieuId);
+                if (lieu != null) {
+                    venteModifiee.setLieu(lieu);
+                } else {
+                    throw new Exception("Le lieu sélectionné n'existe pas");
+                }
+
+                CategVente categ = new CategVente();
+                categ.setCode(codeCateg);
+                venteModifiee.setCategVente(categ);
+
+                if (DaoVente.modifierVente(cnx, venteModifiee)) {
+                    response.sendRedirect(request.getContextPath() + "/vente-servlet/show?idVente=" + idVente);
+                } else {
+                    throw new Exception("Erreur lors de la modification en base");
+                }
+
+            } catch (Exception e) {
+                System.out.println("Erreur modification : " + e.getMessage());
+                response.sendRedirect(request.getContextPath() + "/vente-servlet/list");
             }
         }
     }
